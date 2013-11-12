@@ -423,7 +423,7 @@ function extractSeries(rows, serieField){
 			
 			for(var k in rows){
 				var row = rows[k];
-				var rowSerieValue = row[serieField.name];
+				var rowSerieValue = row[serieField.name] || "Unknown";
 				
 				// check if `serieField` changed in this row from previous row (or if it is the first row)
 				if(currentSerieValue != rowSerieValue){
@@ -438,7 +438,7 @@ function extractSeries(rows, serieField){
 
 					// set the name of the serie that should be displayed
 					if(serieField.displayName)
-						serie.name = row[serieField.displayName];
+						serie.name = row[serieField.displayName] || "Unknown";
 					else
 						serie.name = fields.translate(serieField, currentSerieValue);
 				}
