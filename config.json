@@ -11,5 +11,6 @@
 		"caPath": "ssl/ca_cert.pem",
 		"requestCert": true,
 		"rejectUnauthorized": false
-	}
+	},
+	"allowLocal": false
 }

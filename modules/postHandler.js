@@ -28,6 +28,8 @@ var city = new City("GeoLiteCity.dat");
 // load internal modules
 var db = require("./db/db.js");
 
+var config = require("../config.json");
+
 var debugInstance = 0;
 var Debug = function(){
 	var output = "";
@@ -109,11 +111,11 @@ function process (response, postData, authorized, sensor, io) {
 					// mark if attack ip is extern
 					// add to database
 					//if (ipa != null && ipd != null) {
-					if (ipa) {
-						items.push(data);
+					if (!config.allowLocal && !ipa) {
+						debug.add("An invalid source IP occured in line " + i + ": " + parsedData.src.ip + " (need to be a valid IP that could be resolved to a location via GeoIP)");
 					}
 					else {
-						debug.add("An invalid source IP occured in line " + i + ": " + parsedData.src.ip + " (need to be a valid IP that could be resolved to a location via GeoIP)");
+						items.push(data);
 					}
 	
 				}
