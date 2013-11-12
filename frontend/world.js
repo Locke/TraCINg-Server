@@ -305,8 +305,11 @@ var world = new function() {
 	 * Mark an incident on the 2d map, the street map and the 3d globe
 	 */
 	this.markIncident = function(data, live, noAnimation) {
+		if (!data.src || !data.src.ll || (!data.src.ll[0] && !data.src.ll[1]) )
+			return;
+
 		// remove alert saying "Waiting for attacks..."
-	    $("#tableWaitingAlert").remove();
+		$("#tableWaitingAlert").remove();
 	
 		// update hashmap for displaying number of attacks per LatLng
 		llHash = new String(data.src.ll[0]) + new String(data.src.ll[1]);
