@@ -64,24 +64,24 @@ predefined = {
 }
 
 # Return a field only containing the mandatory field
-def getMandatoryOnlyEntry():
+def getMandatoryOnlyEntry(onlyLocal):
 	payload = recursivedict()
-	payload["src"]["ip"] = getRandomIP()
+	payload["src"]["ip"] = getRandomIP(onlyLocal)
 	return payload
 
 # Return a randomly generated entry using every fields possible
-def getFullEntry(chooseRandomly):
+def getFullEntry(chooseRandomly, onlyLocal):
 	return {
 		"sensor": {
 			"name": sensorName,
 			"type": sensorType,
 		},
 		"src": {
-			"ip": getRandomIP(),
+			"ip": getRandomIP(onlyLocal),
 			"port": getRandomPort(),
 		},
 		"dst": {
-			"ip": getRandomIP(),
+			"ip": getRandomIP(onlyLocal),
 			"port": getRandomPort(),
 		},
 		"type": getRandomIncident(),
@@ -91,13 +91,13 @@ def getFullEntry(chooseRandomly):
 	}
 
 # Return a randomly generated entry (mandatory field always set)
-def getRandomizedEntry(chooseRandomly):
+def getRandomizedEntry(chooseRandomly, onlyLocal):
 	payload = recursivedict()
 	setRandomly(payload, "sensor", "name", sensorName)
 	setRandomly(payload, "sensor", "type", sensorType)
-	payload["src"]["ip"] = getRandomIP()
+	payload["src"]["ip"] = getRandomIP(onlyLocal)
 	setRandomly(payload, "src", "port", getRandomPort())
-	setRandomly(payload, "dst", "ip", getRandomIP())
+	setRandomly(payload, "dst", "ip", getRandomIP(onlyLocal))
 	setRandomly(payload, "dst", "port", getRandomPort())
 	setRandomly(payload, "type", None, getRandomIncident())
 	setRandomly(payload, "log", None, getRandomLog())
@@ -106,18 +106,18 @@ def getRandomizedEntry(chooseRandomly):
 	return payload
 
 # Return a randomly set entry to be submitted
-def getRandomlyEntry(mode, chooseRandomly):
+def getRandomlyEntry(mode, chooseRandomly, onlyLocal):
 	if mode == None:
 		mode = random.randint(0, 2)
 	# only set mandatory fields (source IP address)
 	if mode == 0:
-		payload = getMandatoryOnlyEntry()
+		payload = getMandatoryOnlyEntry(onlyLocal)
 	# set every possible field
 	elif mode == 1:
-		payload = getFullEntry(chooseRandomly)
+		payload = getFullEntry(chooseRandomly, onlyLocal)
 	# set randomly fields (but always the mandatory field)
 	else:
-		payload = getRandomizedEntry(chooseRandomly)
+		payload = getRandomizedEntry(chooseRandomly, onlyLocal)
 	return payload
 
 # Return either the current or a random time (32bit unix time)
@@ -140,9 +140,20 @@ def getRandomPort():
 	return random.randint(0, 2**16 - 1)
 
 # Return a random IP address
-def getRandomIP():
-	ip = [random.randint(0, 255) for _ in range(4)]
-	return '.'.join([str(e) for e in ip])
+def getRandomIP(onlyLocal):
+    if onlyLocal:
+        mode = random.randint(0, 2)
+
+        if mode == 0:
+            ip = [172, random.randint(16, 31)] + [random.randint(0, 255) for _ in range(2)]
+        elif mode == 1:
+            ip = [192, 168] + [random.randint(0, 255) for _ in range(2)]
+        else:
+            ip = [10] + [random.randint(0, 255) for _ in range(3)]
+    else:
+    	ip = [random.randint(0, 255) for _ in range(4)]
+	
+    return '.'.join([str(e) for e in ip])
 
 # Return a random incident chosen from incidentTypes dictionary
 def getRandomIncident():
@@ -197,6 +208,7 @@ def main():
 	parser.add_argument("-lf", "--log-format", help = "send multiple incident reports in one log (by default 3 to 10 reports per log)", action = "store_true")
 	parser.add_argument("-ls", "--log-size", help = "set the MIN and MAX number of incident reports per log (by default MIN = 3 and MAX = 10)", nargs = 2, metavar = ("MIN", "MAX"), type = positiveInt, default = [3, 10])
 	parser.add_argument("-r", "--random-time", help = "set the timestamp at random instead of using the current time", action = "store_true")
+	parser.add_argument("-lo", "--only-local", help = "use only local IP adresses", action = "store_true")
 	group = parser.add_mutually_exclusive_group()
 	group.add_argument("-p", "--predefined", help = "send a predefined incident report (cf. the source of this program for details about the predefined report)", action = "store_true")
 	group.add_argument("-cu", "--custom", help = "apply a custom incident REPORT in JSON format, for example: '{\"src\":{\"ip\":\"192.30.252.130\"}}' (put the incident report into single quotes to prevent the shell from removing the double quotes)", metavar = "REPORT", type = json.loads)
@@ -221,10 +233,10 @@ def main():
 				entry = ""
 				size = random.randint(args.log_size[0], args.log_size[1])
 				for j in range(0, size):
-					entry += getRandomlyEntry(args.mode, args.random_time) + "\n"
+					entry += getRandomlyEntry(args.mode, args.random_time, args.only_local) + "\n"
 			else:
 				# send a single entry
-				entry = getRandomlyEntry(args.mode, args.random_time)
+				entry = getRandomlyEntry(args.mode, args.random_time, args.only_local)
 			# post the entry
 			result = post(json.dumps(entry), args.url, args.cert, not args.no_cert, args.verify_cert)
 			# print server reply
