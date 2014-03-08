@@ -1,6 +1,10 @@
 Changelog
 =========
 
+## WIP ##
+
+* support for private networks
+
 ## v1.0.2 ##
 
 * filtering for 'Unknown' incident types returns now all incidents without a known type (issue #30)

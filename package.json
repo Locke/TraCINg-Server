@@ -23,7 +23,8 @@
 		"orm": ">=2.1.4",
 		"node-static": "*",
 		"geoip": "0.4.10",
-		"validator": "<3.0.0"
+		"validator": "<3.0.0",
+		"netmask": "*"
 	},
 	"engines": {
 		"node": ""
