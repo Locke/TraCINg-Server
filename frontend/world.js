@@ -540,7 +540,7 @@ var world = new function() {
 		}
 
 		//make entry
-		var attackTableEntry = [incident.sensortype, incident.sensorname, '<span title="' + typeDescr + '">' + type + '</span>', dateFormat, incident.src.country, incident.src.city, incident.src.port, incident.dst.country, incident.dst.city, incident.dst.port, authorized, md5, log];
+		var attackTableEntry = [incident.sensortype, incident.sensorname, '<span title="' + typeDescr + '">' + type + '</span>', dateFormat, incident.src.network, incident.src.country, incident.src.city, incident.src.port, incident.dst.network, incident.dst.country, incident.dst.city, incident.dst.port, authorized, md5, log];
 		return attackTableEntry;
 	}
 	this.generateTableEntry = generateTableEntry;
