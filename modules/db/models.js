@@ -44,6 +44,7 @@ exports.initialize = function(db){
 			source_city: String,
 			source_latitude: { type: "number", rational: true },
 			source_longitude: { type: "number", rational: true },
+			source_network: String,
 			
 			destination_country: String,
 			destination_cc: String,
@@ -51,6 +52,7 @@ exports.initialize = function(db){
 			destination_city: String,
 			destination_latitude: { type: "number", rational: true },
 			destination_longitude: { type: "number", rational: true },
+			destination_network: String,
 			
 			// data: Object // JSON encoded
 		},

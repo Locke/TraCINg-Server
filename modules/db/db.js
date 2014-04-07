@@ -33,6 +33,7 @@ var Models = require("./models.js");
 
 var config = require("../../config.json");
 var fields = require("../fields.js");
+var networks = require("../networks.js");
 
 var ready = false;
 var Incident;
@@ -73,9 +74,11 @@ function convertToDBModel(items){
 			
 			source_port: data.src.port,
 			source_ip: data.src.ip,
+			source_network: networks.search(data.src.ip),
 			
 			destination_port: data.dst.port,
 			destination_ip: data.dst.ip,
+			destination_network: networks.search(data.dst.ip),
 			
 			type: data.type,
 			log: sanitize(data.log).chain().trim().entityEncode().nl2br().value(),
@@ -121,6 +124,7 @@ function convertFromDBModel(input){
 			
 			src: {
 				//ip: data.source_ip, // do not send ip to clients
+				network: data.source_network,
 				port: data.source_port,
 				country: data.source_country,
 				cc: data.source_cc,
@@ -130,6 +134,7 @@ function convertFromDBModel(input){
 			
 			dst: {
 				//ip: data.destination_ip, // do not send ip to client
+				network: data.destination_network,
 				port: data.destination_port,
 				country: data.destination_country,
 				cc: data.destination_cc,
