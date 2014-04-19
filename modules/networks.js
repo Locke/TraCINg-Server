@@ -21,21 +21,34 @@ var Netmask = require('netmask').Netmask
 
 var config = require("../config.json");
 var networks = require("../networks.json");
-var netmasks = {};
+var data = {};
+
+var paths = {};
+
+function getPath(name) {
+	if(!name) return "";
+	if(paths[name]) return paths[name];
+
+	var path = getPath(networks[name].parent) + "/" + name;
+	paths[name] = path;
+	return path
+}
 
 function initialize(){
 	for (var name in networks) {
 		var n = networks[name];
 		if (n) {
-			var tmp = [];
+			var comment = n.comment;
+			var path = getPath(name);
+			var netmasks = [];
 			if (n.networks) {
 				for (var i in n.networks) {
 					var range = n.networks[i];
 					var block = new Netmask(range);
-					tmp.push(block);
+					netmasks.push(block);
 				}
 			}
-			netmasks[name] = tmp;
+			data[name] = {"netmasks": netmasks, "comment": comment, "path": path};
 		}
 	}
 }
@@ -45,13 +58,13 @@ initialize();
 
 function search(ip) {
 	if (!ip) return null;
-	for (var name in netmasks) {
-		for (var index in netmasks[name]) {
-			if (netmasks[name][index].contains(ip))
-				return name;
+	for (var name in data) {
+		for (var index in data[name].netmasks) {
+			if (data[name].netmasks[index].contains(ip))
+				return data[name].path;
 		}
 	}
-	return null;
+	return "";
 }
 
 exports.search = search;
