@@ -41,7 +41,9 @@ var world = new function() {
 	var requestPaused = ".";				// text to show in speed information if loading is currently paused
 	var attackNumberHash = {};				// hashmap containing the number of attacks per Lat/Lng position
 	var controller = new Controller();
-	
+
+	var views = [];
+
 	/**
 	 * Toggle whether the key control is enabled or not
 	 */
@@ -61,7 +63,7 @@ var world = new function() {
 	this.showMap = function() {
 		if (mapObject === undefined) {
 			mapObject = new map($('#map'), 'world_mill_en', 'navy');
-			
+			views[view.MAP] = mapObject;
 		}
 		currentView = view.MAP;
 		controller.registerCallbacks({
@@ -92,6 +94,7 @@ var world = new function() {
 	this.showStreetmap = function() {
 		if (streetmapObject === undefined) {
 			streetmapObject = new streetmap('streetmap');
+			views[view.STREETMAP] = streetmapObject;
 		}
 		currentView = view.STREETMAP;
 		controller.registerCallbacks({
@@ -140,9 +143,11 @@ var world = new function() {
 				'modifyMarkerLabel': modifyMarkerLabel,
 				'setCountryLabel': setCountryLabel
 			});
+			views[view.GLOBE] = globeObject;
 		}
-		else
+		else {
 			globeObject.resize();
+		}
 		currentView = view.GLOBE;
 		controller.registerCallbacks({
 			zoom: function(dir) {
@@ -306,8 +311,8 @@ var world = new function() {
 	 */
 	this.markIncident = function(data, live, noAnimation) {
 		// remove alert saying "Waiting for attacks..."
-	    $("#tableWaitingAlert").remove();
-	
+		$("#tableWaitingAlert").remove();
+
 		// update hashmap for displaying number of attacks per LatLng
 		llHash = new String(data.src.ll[0]) + new String(data.src.ll[1]);
 		if (attackNumberHash[llHash] != undefined) {
