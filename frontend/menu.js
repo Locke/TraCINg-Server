@@ -274,9 +274,8 @@ function refreshMap() {
 	// show "no data" alert if map, globe or table is active
 	if (!$("#stats").is(":visible"))
 		showInfoNoData();
-	// reset maps and table
+	// reset views and table
 	world.reset();
-	world.resetTable();
 }
 
 

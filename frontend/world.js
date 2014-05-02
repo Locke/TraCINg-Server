@@ -407,29 +407,24 @@ var world = new function() {
 	}
 	
 	/**
-	 * Reset every marker on the 2d map, the streetmap and the 3d globe
+	 * Reset every incident
 	 */
 	this.reset = function() {
-		// reset 2d maps abd globe
-		mapObject && mapObject.reset();
-		streetmapObject && streetmapObject.reset();
-		globeObject && globeObject.reset();
-		
+		// reset views
+		for (var key in views) {
+			views[key].reset();
+		}
+
+		// reset table
+		$("#attackTable").dataTable().fnClearTable();
+
 		attackNumberHash = {};
-		
+
 		// reset progress bar
 		$('.bar').css('width', 0);
 		// reset progress information
 		$('#requestInfo').text('');
 		//TODO also influence x/y entries loaded and successfully loaded y items?
-	}
-	
-	/**
-	 * Reset the table
-	 */
-	this.resetTable = function() {
-		// reset table
-		$("#attackTable").dataTable().fnClearTable();
 	}
 	
 	/**
