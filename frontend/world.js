@@ -74,7 +74,7 @@ var world = new function() {
 	 */
 	this.showStreetmap = function() {
 		if (streetmapObject === undefined) {
-			streetmapObject = new streetmap(controller, 'streetmap');
+			streetmapObject = new streetmap(controller, $('#streetmap'));
 			views[view.STREETMAP] = streetmapObject;
 		}
 		currentView = view.STREETMAP;
@@ -86,7 +86,7 @@ var world = new function() {
 	 */
 	this.showGlobe = function() {
 		if (globeObject === undefined) {
-			globeObject = new GlobeView(controller);
+			globeObject = new GlobeView(controller, $('#globe'));
 			views[view.GLOBE] = globeObject;
 		}
 		else {
@@ -250,29 +250,15 @@ var world = new function() {
 		var sourceLabel = getLabel(data, live);
 		
 		// each view has it own marker key
-		var mapKey;
-		var streetmapKey;
-		var globeKey;
-		// mark on 2d map and try to animate
-		if (mapObject != undefined) {
-			mapKey = mapObject.addMarker(data.src.cc, data.src.ll, sourceColor, sourceLabel);
-			if (currentView == view.MAP && !noAnimation) {
-				var pos = mapObject.getPosition(data.src.ll[0], data.src.ll[1]);
-				animateMarker(pos.x, pos.y, sourceColor, "#map", mapKey);
+		var keys = [];
+
+		// add marker to views and try to animate it
+		for (var i in views) {
+			keys[i] = views[i].addMarker(data.src.cc, data.src.ll, sourceColor, sourceLabel);
+			if (currentView == i && !noAnimation && !views[i].viewOptions.animatesMarker) {
+				var pos = views[i].getPosition(data.src.ll[0], data.src.ll[1]);
+				animateMarker(pos.x, pos.y, sourceColor, views[i].container, keys[i]);
 			}
-		}
-		// mark on streetmap and try to animate
-		if (streetmapObject != undefined) {
-			streetmapKey = streetmapObject.addMarker(data.src.ll, sourceColor, sourceLabel);
-			if (currentView == view.STREETMAP && !noAnimation) {
-				var pos = streetmapObject.getPosition(data.src.ll[0], data.src.ll[1]);
-				animateMarker(pos.x, pos.y, sourceColor, "#streetmap", streetmapKey);
-			}
-		}
-		// mark on 3d map
-		if (globeObject != undefined) {
-			globeKey = globeObject.addMarker(data.src.cc, data.src.ll[0], data.src.ll[1], sourceLabel);
-			// globe has its own mechanism to animate a marker
 		}
 		
 		// set timeout to remove marker if in live view
@@ -287,13 +273,12 @@ var world = new function() {
 					} else {
 						attackNumberHash[llHash] = undefined;
 					}
-					// remove marker on 2d maps and globe
-					if (mapKey != undefined && mapObject != undefined)
-						mapObject.removeMarker(mapKey);
-					if (streetmapKey != undefined && streetmapObject != undefined)
-						streetmapObject.removeMarker(streetmapKey);
-					if (globeKey != undefined && globeObject != undefined)
-						globeObject.removeMarker(globeKey);
+
+					// remove marker on views
+					for (var i in keys) {
+						if (keys[i] != undefined)
+							views[i].removeMarker(keys[i]);
+					}
 				},
 				expireTime
 			);

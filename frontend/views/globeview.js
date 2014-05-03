@@ -16,12 +16,18 @@
  * limitations under the License.
  */
 
-var GlobeView = function(controller) {
+var GlobeView = function(controller, container) {
 	console.log("globeview", arguments);
 	var self = this;
+	var container = container;
+
+	this.viewOptions = {
+		animatesMarker: true, // globe animates them -> world shouldn't do it
+	};
+	this.container = container;
 
 	// create globeObject
-	var container = document.getElementById('globe');
+
 	// set modifyMarkerLabel function for globe
 	var modifyMarkerLabel = function(label) {
 		if (!advInfo) {
@@ -36,7 +42,7 @@ var GlobeView = function(controller) {
 		return country + " (" + markers + " attacks of " + allMarkers + " total)";
 	};
 
-	var globe = new GLOBE.main(container, "extern/globe/images/", {
+	var globe = new GLOBE.main(container[0], "extern/globe/images/", {
 		'modifyMarkerLabel': modifyMarkerLabel,
 		'setCountryLabel': setCountryLabel
 	});

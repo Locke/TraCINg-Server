@@ -19,7 +19,12 @@
 var streetmap = function(controller, container) {
 	var self = this;
 
-	var stmap = new L.Map(container);	// create a map
+	this.viewOptions = {
+		animatesMarker: false, // map does not animate them -> world should do it
+	};
+	this.container = container;
+
+	var stmap = new L.Map(container[0]);	// create a map
 	var maxKey = 500;					// maximum amount of markers
 	var markerArray = [maxKey];			// array containing all markers
 	var uniqueKey = 0;					// unique key for marker id
@@ -70,7 +75,7 @@ var streetmap = function(controller, container) {
 	/*
 	 * mark incident on the map
 	 */
-	this.addMarker = function(ll, color, label) {
+	this.addMarker = function(cc, ll, color, label) {
 		
 		incidents++;
 		

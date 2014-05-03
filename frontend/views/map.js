@@ -24,7 +24,12 @@
  */
 var map = function(controller, container, map, backgroundColor) {
 	var self = this;
-	
+
+	this.viewOptions = {
+		animatesMarker: false, // map does not animate them -> world should do it
+	};
+	this.container = container;
+
 	var uniqueKey = 0;						// unique key for marker id
 	var maxKey = 500;						// maximum amount of markers
 	var incidentsPerCountry = {};			// incidents per country

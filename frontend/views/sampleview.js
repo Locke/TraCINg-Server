@@ -21,6 +21,11 @@ var sampleview = function(controller) {
 
 	var self = this;
 
+	this.viewOptions = {
+		animatesMarker: false, // does not animate them -> world should do it
+	};
+	this.container = undefined;
+
 	this.controllerCallbacks = {
 		zoom: function(dir) {
 			console.log("sampleview.controllerCallbacks.zoom", arguments);
