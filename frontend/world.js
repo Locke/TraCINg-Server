@@ -124,25 +124,7 @@ var world = new function() {
 	 */
 	this.showGlobe = function() {
 		if (globeObject === undefined) {
-			// create globeObject
-			var container = document.getElementById('globe');
-			// set modifyMarkerLabel function for globe
-			var modifyMarkerLabel = function(label) {
-					if (!advInfo) {
-						var splittedLabel = label.split(";");
-						label = splittedLabel[0];
-					}
-					return label;
-			};
-			// set setCountryLabel function for globe
-			var setCountryLabel = function(cc, markers, allMarkers) {
-					var country = countryName[cc];
-					return country + " (" + markers + " attacks of " + allMarkers + " total)";
-			};
-			globeObject = new GLOBE.main(container, "extern/globe/images/", {
-				'modifyMarkerLabel': modifyMarkerLabel,
-				'setCountryLabel': setCountryLabel
-			});
+			globeObject = new GlobeView();
 			views[view.GLOBE] = globeObject;
 		}
 		else {
@@ -346,7 +328,7 @@ var world = new function() {
 			}
 		}
 		// mark on 3d map
-		if (globeObject != undefined && globeObject.addMarker != undefined) {
+		if (globeObject != undefined) {
 			globeKey = globeObject.addMarker(data.src.cc, data.src.ll[0], data.src.ll[1], sourceLabel);
 			// globe has its own mechanism to animate a marker
 		}
@@ -400,7 +382,7 @@ var world = new function() {
 	 * State whether there is a marker on the globe
 	 */
 	this.globeHasMarker = function() {
-		if (globeObject != undefined && globeObject.hasMarker != undefined) {
+		if (globeObject != undefined) {
 			return globeObject.hasMarker();
 		}
 		return false;
