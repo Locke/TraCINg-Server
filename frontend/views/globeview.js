@@ -95,7 +95,7 @@ var GlobeView = function(controller) {
 	this.addMarker = function(cc, ll, color, label) {
 		console.log("globeview.addMarker", arguments);
 		if (globe.addMarker == undefined) return;
-		return globe.addMarker(cc, ll, color, label);
+		return globe.addMarker(cc, ll[0], ll[1], label);
 	}
 	
 	/**
