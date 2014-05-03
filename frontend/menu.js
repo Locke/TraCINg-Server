@@ -103,19 +103,19 @@ function updateHelpElements() {
  */
 function updateMenu(tab){
 		// "2D View" entry chosen via hash, show 2D map
-	    if (tab == 'map') {
-	    	world.showMap();
-	    	// if there is no attack data show an info alert
-			if (!world.jvmHasMarker())
+		if (tab == 'map') {
+			world.show(world.view.MAP);
+			// if there is no attack data show an info alert
+			if (!world.hasCurrentlyMarker())
 				showInfoNoData();
 			// if there is attack data remove the info alert
 			else
 				$("#tableWaitingAlert").remove();
-	    	// set help if active
-	    	if (help)
-		    	$("#helpEntry").addClass("active");
+			// set help if active
+			if (help)
+				$("#helpEntry").addClass("active");
 			// resize map before showing it to prevent it from showing up tiny
-		    $("#map").resize();
+			$("#map").resize();
 
 			// set left window and toogleLive
 			updateWins("dbWin", !live, true, !live && requestAttackUpdate);
@@ -124,48 +124,48 @@ function updateMenu(tab){
 		}
 		// "Street View" entry chosen via hash, show streetmap
 		else if (tab == 'streetmap') {
-			world.showStreetmap();
+			world.show(world.view.STREETMAP);
 			// if there is no attack data show an info alert
-			if (!world.stMapHasMarker())
+			if (!world.hasCurrentlyMarker())
 				showInfoNoData();
 			// if there is attack data remove the info alert
 			else
 				$("#tableWaitingAlert").remove();
 			if (help)
 				$("#helpEntry").addClass("active");
-			
+
 			updateWins("dbWin", !live, true, !live && requestAttackUpdate);
 			$("#advMarkerInfo").removeClass("disabled");
 			$("#resetMap").removeClass("disabled");
 		}
 		// "3D View" entry chosen via hash, show 3D map
 		else if (tab == 'globe') {
-			world.showGlobe();
+			world.show(world.view.GLOBE);
 			// if there is no attack data show an info alert
-			if (!world.globeHasMarker())
+			if (!world.hasCurrentlyMarker())
 				showInfoNoData();
 			// if there is attack data remove the info alert
 			else
 				$("#tableWaitingAlert").remove();
 			if (help)
 				$("#helpEntry").addClass("active");
-			
+
 			updateWins("dbWin", !live, true, !live && requestAttackUpdate);
 			$("#advMarkerInfo").removeClass("disabled");
 			$("#resetMap").removeClass("disabled");
 		}
 		// "Table View" entry chosen via hash, show table
 		else if (tab == 'table') {
-			world.leaveMap();
+			world.show(world.view.NULL);
 			if (help)
-		    	$("#helpEntry").addClass("active");
-		    // if there is no attack data show an info alert
-		    if ($("#table .dataTables_empty").length > 0)
-		    	showInfoNoData();
+				$("#helpEntry").addClass("iactive");
+			// if there is no attack data show an info alert
+			if ($("#table .dataTables_empty").length > 0)
+				showInfoNoData();
 			// if there is attack data remove the info alert
 			else
 				$("#tableWaitingAlert").remove();
-			
+
 			updateWins("dbWin", !live, true, !live && requestAttackUpdate);
 			$("#advMarkerInfo").addClass("disabled");
 			$("#resetMap").removeClass("disabled");
@@ -173,12 +173,12 @@ function updateMenu(tab){
 		}
 		// "Statistics" entry chosen via hash, show statistics
 		else if (tab == 'stats') {
-			world.leaveMap();
+			world.show(world.view.NULL);
 			// remove alert
-	    	$("#tableWaitingAlert").remove();
+			$("#tableWaitingAlert").remove();
 			if (help)
 				$("#helpEntry").addClass("active");
-			
+
 			updateWins("statsWin", true, false, filterUpdateStats);
 
 			var chartsCreated = createCharts();

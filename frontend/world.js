@@ -29,6 +29,7 @@ var world = new function() {
 		GLOBE: 2,
 		NULL: 3,
 	};
+	this.view = view;					// export possible views
 	var currentView;
 
 	var globeObject;						// the 3d globe
@@ -48,19 +49,19 @@ var world = new function() {
 	 * Toggle whether the key control is enabled or not
 	 */
 	this.toggleEnabled = controller.toggleEnabled;
-	
+
 	/**
 	 * Leave maps
 	 */
-	this.leaveMap = function() {
+	function leaveMap() {
 		currentView = view.NULL;
 		controller.unregisterCallbacks();
 	}
-	
+
 	/**
 	 * Show 2d map
 	 */
-	this.showMap = function() {
+	function showMap() {
 		if (mapObject === undefined) {
 			mapObject = new map(controller, $('#map'), 'world_mill_en', 'navy');
 			views[view.MAP] = mapObject;
@@ -68,11 +69,11 @@ var world = new function() {
 		currentView = view.MAP;
 		controller.registerCallbacks(views[view.MAP].controllerCallbacks);
 	}
-	
+
 	/**
 	 * Show streetmap
 	 */
-	this.showStreetmap = function() {
+	function showStreetmap() {
 		if (streetmapObject === undefined) {
 			streetmapObject = new streetmap(controller, $('#streetmap'));
 			views[view.STREETMAP] = streetmapObject;
@@ -80,11 +81,11 @@ var world = new function() {
 		currentView = view.STREETMAP;
 		controller.registerCallbacks(views[view.STREETMAP].controllerCallbacks);
 	}
-	
+
 	/**
 	 * Show 3d globe
 	 */
-	this.showGlobe = function() {
+	function showGlobe() {
 		if (globeObject === undefined) {
 			globeObject = new GlobeView(controller, $('#globe'));
 			views[view.GLOBE] = globeObject;
@@ -95,7 +96,15 @@ var world = new function() {
 		currentView = view.GLOBE;
 		controller.registerCallbacks(views[view.GLOBE].controllerCallbacks);
 	}
-	
+
+	this.show = function(v) {
+		if (v == view.MAP) showMap();
+		else if (v == view.STREETMAP) showStreetmap();
+		else if (v == view.GLOBE) showGlobe();
+		else if (v == view.NULL) leaveMap();
+		else { console.err("Unknown view: " + v); leaveMap(); }
+	}
+
 	/**
 	 * Delay database markings
 	 */
@@ -284,33 +293,13 @@ var world = new function() {
 			);
 		}
 	}
-	
+
 	/**
-	 * State whether there is a marker on the jVectorMap
+	 * State whether the current view has at least one marker
 	 */
-	this.jvmHasMarker = function() {
-		if (mapObject != undefined) {
-			return mapObject.hasMarker();
-		}
-		return false;
-	}
-	
-	/**
-	 * State whether there is a marker on the streetmap
-	 */
-	this.stMapHasMarker = function() {
-		if (streetmapObject != undefined) {
-			return streetmapObject.hasMarker();
-		}
-		return false;
-	}
-	
-	/**
-	 * State whether there is a marker on the globe
-	 */
-	this.globeHasMarker = function() {
-		if (globeObject != undefined) {
-			return globeObject.hasMarker();
+	this.hasCurrentlyMarker = function() {
+		if (views[currentView] != undefined) {
+			return views[currentView].hasMarker();
 		}
 		return false;
 	}
