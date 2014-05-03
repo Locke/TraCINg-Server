@@ -16,8 +16,22 @@
  * limitations under the License.
  */
 
-var sampleview = function() {
+var sampleview = function(controller) {
 	console.log("sampleview", arguments);
+
+	var self = this;
+
+	this.controllerCallbacks = {
+		zoom: function(dir) {
+			console.log("sampleview.controllerCallbacks.zoom", arguments);
+		},
+		move: function(dir) {
+			console.log("sampleview.controllerCallbacks.move", arguments);
+		},
+		toggle: function() {
+			console.log("sampleview.controllerCallbacks.toggle", arguments);
+		},
+	};
 
 	/**
 	 * Reset the map removing every point

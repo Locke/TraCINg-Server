@@ -16,7 +16,8 @@
  * limitations under the License.
  */
 
-var streetmap = function(container) {
+var streetmap = function(controller, container) {
+	var self = this;
 
 	var stmap = new L.Map(container);	// create a map
 	var maxKey = 500;					// maximum amount of markers
@@ -25,6 +26,28 @@ var streetmap = function(container) {
 	var holdTime = 100;					// time in ms until a label disappears
 	var incidents = 0;					// total sum of incidents
 	
+
+	this.controllerCallbacks = {
+		zoom: function(dir) {
+			if (dir == controller.args.IN)
+				self.zoom(1);
+			if (dir == controller.args.OUT)
+				self.zoom(-1);
+		},
+		move: function(dir) {
+			var speed = 120;
+			if (dir == controller.args.LEFT)
+				self.move(speed,0);
+			if (dir == controller.args.RIGHT)
+				self.move(-speed, 0);
+			if (dir == controller.args.UP)
+				self.move(0, speed);
+			if (dir == controller.args.DOWN)
+				self.move(0, -speed);
+		},
+		toggle: undefined,
+	};
+
 	// set standard (start) view (first argument: lat/lng; second argument: zoom (the smaller the farther away))
 	stmap.setView([35, 0], 3, {animate: false});
 	// deactivate native keybindings

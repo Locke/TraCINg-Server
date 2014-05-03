@@ -22,13 +22,36 @@
  * @param map				the name of the jvectormap map
  * @param backgroundColor	the background color of the map
  */
-var map = function(container, map, backgroundColor) {
+var map = function(controller, container, map, backgroundColor) {
+	var self = this;
 	
 	var uniqueKey = 0;						// unique key for marker id
 	var maxKey = 500;						// maximum amount of markers
 	var incidentsPerCountry = {};			// incidents per country
 	var incidents = 0;						// total sum of incidents
 	var countryCode = [maxKey];				// country code of every marker
+
+	this.controllerCallbacks = {
+		zoom: function(dir) {
+			if (dir == controller.args.IN)
+				self.zoom(1.6);
+			if (dir == controller.args.OUT)
+				self.zoom(1/1.6);
+		},
+		move: function(dir) {
+			var speed = 120;
+			if (dir == controller.args.LEFT)
+				self.move(speed,0);
+			if (dir == controller.args.RIGHT)
+				self.move(-speed, 0);
+			if (dir == controller.args.UP)
+				self.move(0, speed);
+			if (dir == controller.args.DOWN)
+				self.move(0, -speed);
+		},
+		toggle: undefined,
+	};
+
 	var mapObject = new jvm.WorldMap( {		// jvectormap
 		container: container,
 		map: map,

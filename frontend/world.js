@@ -62,30 +62,11 @@ var world = new function() {
 	 */
 	this.showMap = function() {
 		if (mapObject === undefined) {
-			mapObject = new map($('#map'), 'world_mill_en', 'navy');
+			mapObject = new map(controller, $('#map'), 'world_mill_en', 'navy');
 			views[view.MAP] = mapObject;
 		}
 		currentView = view.MAP;
-		controller.registerCallbacks({
-			zoom: function(dir) {
-				if (dir == controller.args.IN)
-					mapObject.zoom(1.6);
-				if (dir == controller.args.OUT)
-					mapObject.zoom(1/1.6);
-			},
-			move: function(dir) {
-				var speed = 120;
-				if (dir == controller.args.LEFT)
-					mapObject.move(speed,0);
-				if (dir == controller.args.RIGHT)
-					mapObject.move(-speed, 0);
-				if (dir == controller.args.UP)
-					mapObject.move(0, speed);
-				if (dir == controller.args.DOWN)
-					mapObject.move(0, -speed);
-			},
-			toggle: undefined,
-		});
+		controller.registerCallbacks(views[view.MAP].controllerCallbacks);
 	}
 	
 	/**
@@ -93,30 +74,11 @@ var world = new function() {
 	 */
 	this.showStreetmap = function() {
 		if (streetmapObject === undefined) {
-			streetmapObject = new streetmap('streetmap');
+			streetmapObject = new streetmap(controller, 'streetmap');
 			views[view.STREETMAP] = streetmapObject;
 		}
 		currentView = view.STREETMAP;
-		controller.registerCallbacks({
-			zoom: function(dir) {
-				if (dir == controller.args.IN)
-					streetmapObject.zoom(1);
-				if (dir == controller.args.OUT)
-					streetmapObject.zoom(-1);
-			},
-			move: function(dir) {
-				var speed = 120;
-				if (dir == controller.args.LEFT)
-					streetmapObject.move(speed,0);
-				if (dir == controller.args.RIGHT)
-					streetmapObject.move(-speed, 0);
-				if (dir == controller.args.UP)
-					streetmapObject.move(0, speed);
-				if (dir == controller.args.DOWN)
-					streetmapObject.move(0, -speed);
-			},
-			toggle: undefined,
-		});
+		controller.registerCallbacks(views[view.STREETMAP].controllerCallbacks);
 	}
 	
 	/**
@@ -124,34 +86,14 @@ var world = new function() {
 	 */
 	this.showGlobe = function() {
 		if (globeObject === undefined) {
-			globeObject = new GlobeView();
+			globeObject = new GlobeView(controller);
 			views[view.GLOBE] = globeObject;
 		}
 		else {
 			globeObject.resize();
 		}
 		currentView = view.GLOBE;
-		controller.registerCallbacks({
-			zoom: function(dir) {
-				if (dir == controller.args.IN)
-					globeObject.zoom(100);
-				if (dir == controller.args.OUT)
-					globeObject.zoom(-100);
-			},
-			move: function(dir) {
-				if (dir == controller.args.LEFT)
-					globeObject.rotate(-0.000001, 0);
-				if (dir == controller.args.RIGHT)
-					globeObject.rotate(0.000001, 0);
-				if (dir == controller.args.UP)
-					globeObject.rotate(0, 0.0000005);
-				if (dir == controller.args.DOWN)
-					globeObject.rotate(0, -0.0000005);
-			},
-			toggle: function() {
-				globeObject.toggleView();
-			},
-		});
+		controller.registerCallbacks(views[view.GLOBE].controllerCallbacks);
 	}
 	
 	/**

@@ -16,8 +16,9 @@
  * limitations under the License.
  */
 
-var GlobeView = function() {
+var GlobeView = function(controller) {
 	console.log("globeview", arguments);
+	var self = this;
 
 	// create globeObject
 	var container = document.getElementById('globe');
@@ -39,6 +40,29 @@ var GlobeView = function() {
 		'modifyMarkerLabel': modifyMarkerLabel,
 		'setCountryLabel': setCountryLabel
 	});
+
+
+	this.controllerCallbacks = {
+		zoom: function(dir) {
+			if (dir == controller.args.IN)
+				self.zoom(100);
+			if (dir == controller.args.OUT)
+				self.zoom(-100);
+		},
+		move: function(dir) {
+			if (dir == controller.args.LEFT)
+				self.rotate(-0.000001, 0);
+			if (dir == controller.args.RIGHT)
+				self.rotate(0.000001, 0);
+			if (dir == controller.args.UP)
+				self.rotate(0, 0.0000005);
+			if (dir == controller.args.DOWN)
+				self.rotate(0, -0.0000005);
+		},
+		toggle: function() {
+			self.toggleView();
+		},
+	};
 
 
 	/**
