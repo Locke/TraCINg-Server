@@ -30,6 +30,7 @@ var map = function(controller, container, map, backgroundColor) {
 	};
 	this.container = container;
 
+	var mapObject;
 	var uniqueKey = 0;						// unique key for marker id
 	var maxKey = 500;						// maximum amount of markers
 	var incidentsPerCountry = {};			// incidents per country
@@ -57,51 +58,56 @@ var map = function(controller, container, map, backgroundColor) {
 		toggle: undefined,
 	};
 
-	var mapObject = new jvm.WorldMap( {		// jvectormap
-		container: container,
-		map: map,
-		backgroundColor: backgroundColor,
-		markers: [],
-		series: {
-			regions: [{ /* region means in our context country, as we are using a worldmap */
-				// serie to display incidents per country
-				attribute: "fill",
-				min: -1,
-				max: -2,
-				scale: ['#FFFFFF', '#FF0000'],
-				normalizeFunction: function(value) {
-					// if min value
-					if (value == -1)
-						return 0;
-					// if max value
-					if (value == -2)
-						return 1;
-					// if there are no incidents return 0
-					if (incidents == 0)
-						return 0;
-					// otherwise return (value/incidents)^(1/3)
-					return Math.pow(value/incidents, 1/3);
-				},
-			}],
-		},
-		// show region label function
-		onRegionLabelShow: function(e, el, code) {
-			var attacks = incidentsPerCountry[code] || 0;
-			if (attacks == 1)
-				el.html(el.html() + " (" + attacks + " attack of " + incidents + " total)");
-			else
-				el.html(el.html() + " (" + attacks + " attacks of " + incidents + " total)");
-  		},
-  		onMarkerLabelShow: function(e, label, code) {
-  			// show only standard label information if advanced information is not requested (default is advanced)
-  			if (!advInfo) {
-	  			var splittedName = label.text().split(";");
-	  			label.html(splittedName[0]);
-  			} else {
-				label.html(label.text());
+	this.initialized = false;
+	this.initialize = function() {
+		mapObject = new jvm.WorldMap( {	// jvectormap
+			container: container,
+			map: map,
+			backgroundColor: backgroundColor,
+			markers: [],
+			series: {
+				regions: [{ /* region means in our context country, as we are using a worldmap */
+					// serie to display incidents per country
+					attribute: "fill",
+					min: -1,
+					max: -2,
+					scale: ['#FFFFFF', '#FF0000'],
+					normalizeFunction: function(value) {
+						// if min value
+						if (value == -1)
+							return 0;
+						// if max value
+						if (value == -2)
+							return 1;
+						// if there are no incidents return 0
+						if (incidents == 0)
+							return 0;
+						// otherwise return (value/incidents)^(1/3)
+						return Math.pow(value/incidents, 1/3);
+					},
+				}],
+			},
+			// show region label function
+			onRegionLabelShow: function(e, el, code) {
+				var attacks = incidentsPerCountry[code] || 0;
+				if (attacks == 1)
+					el.html(el.html() + " (" + attacks + " attack of " + incidents + " total)");
+				else
+					el.html(el.html() + " (" + attacks + " attacks of " + incidents + " total)");
+			},
+			onMarkerLabelShow: function(e, label, code) {
+				// show only standard label information if advanced information is not requested (default is advanced)
+				if (!advInfo) {
+					var splittedName = label.text().split(";");
+					label.html(splittedName[0]);
+				} else {
+					label.html(label.text());
+				}
 			}
-  		}
-	});
+		});
+
+		this.initialized = true;
+	}
 	
 	/**
 	 * Reset the map removing every point

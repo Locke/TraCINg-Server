@@ -56,8 +56,8 @@ var world = new function() {
 	}
 
 
-	this.initializeView = function(v) {
-		// check if view is already initialized
+	this.loadView = function(v) {
+		// check if view is already loaded
 		if (views[v] != undefined)
 			return;
 
@@ -69,6 +69,15 @@ var world = new function() {
 			views[v] = new GlobeView(controller, $('#globe'));
 		else
 			console.err("Unknown view: " + v);
+	}
+
+	this.initializeView = function(v) {
+		// check if view is already initialized
+		if (views[v] == undefined)
+			this.loadView(v);
+
+		if (!views[v].initialized)
+			views[v].initialize();
 	}
 
 	this.activateView = function(v) {

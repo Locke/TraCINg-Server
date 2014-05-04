@@ -27,6 +27,7 @@ var GlobeView = function(controller, container) {
 	this.container = container;
 
 	// create globeObject
+	var globe;
 
 	// set modifyMarkerLabel function for globe
 	var modifyMarkerLabel = function(label) {
@@ -42,10 +43,15 @@ var GlobeView = function(controller, container) {
 		return country + " (" + markers + " attacks of " + allMarkers + " total)";
 	};
 
-	var globe = new GLOBE.main(container[0], "extern/globe/images/", {
-		'modifyMarkerLabel': modifyMarkerLabel,
-		'setCountryLabel': setCountryLabel
-	});
+	this.initialized = false;
+	this.initialize = function() {
+		globe = new GLOBE.main(container[0], "extern/globe/images/", {
+			'modifyMarkerLabel': modifyMarkerLabel,
+			'setCountryLabel': setCountryLabel
+		});
+
+		this.initialized = true;
+	}
 
 
 	this.controllerCallbacks = {
