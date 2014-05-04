@@ -174,11 +174,7 @@ var streetmap = function(controller, container) {
 		return false;
 	}
 
-	// based on http://stackoverflow.com/questions/10762984/leaflet-map-not-displayed-properly-inside-tabbed-panel
-	// a rather ugly solution for the "gray map on load" problem
-	$(function() {
-		$("body").on('shown','#StreetViewEntry', function() {
-			stmap.invalidateSize(false);
-		});
-	});
+	this.resize = function() {
+		stmap.invalidateSize(false);
+	}
 }

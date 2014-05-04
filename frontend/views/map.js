@@ -192,4 +192,8 @@ var map = function(controller, container, map, backgroundColor) {
 			return true;
 		return false;
 	}
+
+	this.resize = function() {
+		container.resize();
+	}
 }

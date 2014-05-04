@@ -81,9 +81,7 @@ var world = new function() {
 		currentView = v;
 		controller.registerCallbacks(views[v].controllerCallbacks);
 
-		if (v == view.GLOBE) {
-			views[v].resize();
-		}
+		views[v].resize();
 	}
 
 	/**

@@ -102,54 +102,24 @@ function updateHelpElements() {
  * includes: make navbar buttons toggleable (except help and about as they do not (yet) change the side content)
  */
 function updateMenu(tab){
-		// "2D View" entry chosen via hash, show 2D map
-		if (tab == 'map') {
-			world.activateView(world.view.MAP);
+		// a view entry chosen via hash, activate it
+		if (tab == 'map' || tab == 'streetmap' || tab == 'globe') {
+			if (tab == 'map') world.activateView(world.view.MAP);
+			else if (tab == 'streetmap') world.activateView(world.view.STREETMAP);
+			else if (tab == 'globe') world.activateView(world.view.GLOBE);
+
 			// if there is no attack data show an info alert
 			if (!world.hasCurrentlyMarker())
 				showInfoNoData();
 			// if there is attack data remove the info alert
 			else
 				$("#tableWaitingAlert").remove();
+
 			// set help if active
 			if (help)
 				$("#helpEntry").addClass("active");
-			// resize map before showing it to prevent it from showing up tiny
-			$("#map").resize();
 
 			// set left window and toogleLive
-			updateWins("dbWin", !live, true, !live && requestAttackUpdate);
-			$("#advMarkerInfo").removeClass("disabled");
-			$("#resetMap").removeClass("disabled");
-		}
-		// "Street View" entry chosen via hash, show streetmap
-		else if (tab == 'streetmap') {
-			world.activateView(world.view.STREETMAP);
-			// if there is no attack data show an info alert
-			if (!world.hasCurrentlyMarker())
-				showInfoNoData();
-			// if there is attack data remove the info alert
-			else
-				$("#tableWaitingAlert").remove();
-			if (help)
-				$("#helpEntry").addClass("active");
-
-			updateWins("dbWin", !live, true, !live && requestAttackUpdate);
-			$("#advMarkerInfo").removeClass("disabled");
-			$("#resetMap").removeClass("disabled");
-		}
-		// "3D View" entry chosen via hash, show 3D map
-		else if (tab == 'globe') {
-			world.activateView(world.view.GLOBE);
-			// if there is no attack data show an info alert
-			if (!world.hasCurrentlyMarker())
-				showInfoNoData();
-			// if there is attack data remove the info alert
-			else
-				$("#tableWaitingAlert").remove();
-			if (help)
-				$("#helpEntry").addClass("active");
-
 			updateWins("dbWin", !live, true, !live && requestAttackUpdate);
 			$("#advMarkerInfo").removeClass("disabled");
 			$("#resetMap").removeClass("disabled");
