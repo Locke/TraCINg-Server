@@ -483,11 +483,11 @@ var world = new function() {
 	/**
 	 * resize table
 	 */
-	function resize() {
+	function resizeTable() {
 		updateAttackTableHeight();
 		$("#attackTable").dataTable().fnDraw();
 	}
-	this.resize = resize;
+	this.resizeTable = resizeTable;
 }
 
 function showLog(id){
@@ -510,10 +510,10 @@ $(function(){
 	});
 
 	setTimeout(function() {
-		world.resize();
+		world.resizeTable();
 	}, 10);
 });
 
 $(window).resize($.throttle(250,function() {
-	world.resize();
+	world.resizeTable();
 }));
