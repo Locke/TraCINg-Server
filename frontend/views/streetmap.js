@@ -80,76 +80,83 @@ var streetmap = function(controller, container) {
 	}
 
 	/*
-	 * mark incident on the map
+	 * mark incidents on the map
 	 */
-	this.addIncident = function(data, color) {
-		var cc = data.src.cc;
-		var ll = data.src.ll;
-		var label = data.src.label;
-		
-		incidents++;
-		
-		// create a marker (leaflet circle)
-		var size = 500; // 500 meter circle
-		var latLng = new L.LatLng(ll[0], ll[1]);
-		var circle = L.circle(latLng, size, { color: color, fillColor: color, fillOpacity: 0.5 });
-		circle.addTo(stmap);
-		
-		// create a popup that will not receive focus on creation (i.e. no autoPan)
-		var popup = new L.Popup({autoPan: false}).setContent(label);
-		circle.bindPopup(popup);
-		
-		// show popup on mousehover, hide popup on mouseout
-		var stmapHoverTimer;
-		
-		circle.on("mouseover", function(e) {
-			// show standard or advanced label information depending on which is requested
-			var splittedLabel = label.split(";");
-			if (advInfo)
-				this._popup.setContent(label);
-			else
-				this._popup.setContent(splittedLabel[0]);
-			this.openPopup();
-			
-			var marker = this;
-			
-			// define mouseleave events
-			popup._container.addEventListener("mouseleave", function(e) {stmapHoverTimer = setTimeout(function() {marker.closePopup()}, holdTime)});
-			
-			// define mouseenter events
-			popup._container.addEventListener("mouseenter", function(e) {clearTimeout(stmapHoverTimer);});
-			
-		});
-		
-		// remove a previously defined marker with the same key
-		removeMarker(uniqueKey);
-		
-		// add the circle to the marker array to be able to remove it
-		markerArray[uniqueKey] = circle;
-		
-		var returnMarker = uniqueKey;
-		uniqueKey = (uniqueKey + 1) % maxKey;
-		return returnMarker;
+	this.addIncidents = function(arr, color) {
+		var ret = [];
+
+		for (var i in arr) {
+			var data = arr[i];
+			var cc = data.src.cc;
+			var ll = data.src.ll;
+			var label = data.src.label;
+
+			incidents++;
+
+			// create a marker (leaflet circle)
+			var size = 500; // 500 meter circle
+			var latLng = new L.LatLng(ll[0], ll[1]);
+			var circle = L.circle(latLng, size, { color: color, fillColor: color, fillOpacity: 0.5 });
+			circle.addTo(stmap);
+
+			// create a popup that will not receive focus on creation (i.e. no autoPan)
+			var popup = new L.Popup({autoPan: false}).setContent(label);
+			circle.bindPopup(popup);
+
+			// show popup on mousehover, hide popup on mouseout
+			var stmapHoverTimer;
+
+			circle.on("mouseover", function(e) {
+				// show standard or advanced label information depending on which is requested
+				var splittedLabel = label.split(";");
+				if (advInfo)
+					this._popup.setContent(label);
+				else
+					this._popup.setContent(splittedLabel[0]);
+				this.openPopup();
+
+				var marker = this;
+
+				// define mouseleave events
+				popup._container.addEventListener("mouseleave", function(e) {stmapHoverTimer = setTimeout(function() {marker.closePopup()}, holdTime)});
+
+				// define mouseenter events
+				popup._container.addEventListener("mouseenter", function(e) {clearTimeout(stmapHoverTimer);});
+			});
+
+			// remove a previously defined marker with the same key
+			removeMarkers([uniqueKey]);
+
+			// add the circle to the marker array to be able to remove it
+			markerArray[uniqueKey] = circle;
+
+			var returnMarker = uniqueKey;
+			uniqueKey = (uniqueKey + 1) % maxKey;
+			ret.push(returnMarker);
+		}
+
+		return ret;
 	}
 	
 	/*
-	 * remove marker
+	 * remove markers
 	 */
-	function removeMarker(key) {
-		if (markerArray[key] != undefined) {
-			stmap.removeLayer(markerArray[key]);
-			markerArray[key] = undefined;
+	function removeMarkers(keys) {
+		for (var i in keys) {
+			var key = keys[i];
+			if (markerArray[key] != undefined) {
+				stmap.removeLayer(markerArray[key]);
+				markerArray[key] = undefined;
+			}
 		}
 	}
-	this.removeMarker = removeMarker;
+	this.removeMarkers = removeMarkers;
 	
 	/*
 	 * remove all markers
 	 */
 	this.reset = function() {
-		for (var i = 0; i < markerArray.length; i++) {
-			removeMarker(i);
-		}
+		removeMarkers(markerArray);
 		uniqueKey = 0;
 		incidents = 0;
 	}

@@ -67,20 +67,20 @@ var sampleview = function(controller, container) {
 	}
 	
 	/**
-	 * Mark incident on the map
+	 * Mark incidents on the map
 	 * 
-	 * return value is used to call removeMarker; do not return anything if you want to store the incident
+	 * return value is used to call removeMarkers if in live view; do not return anything if you want to store the incident
 	 */
-	this.addIncident = function(data, color) {
-		console.log("sampleview.addIncident", arguments);
-		return 0;
+	this.addIncidents = function(arr, color) {
+		console.log("sampleview.addIncidents", arguments);
+		return [0];
 	}
 	
 	/**
-	 * Remove marker
+	 * Remove markers
 	 */
-	this.removeMarker = function(key) {
-		console.log("sampleview.removeMarker", arguments);
+	this.removeMarkers = function(keys) {
+		console.log("sampleview.removeMarkers", arguments);
 	}
 	
 	/**

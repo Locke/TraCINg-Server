@@ -117,7 +117,7 @@ var world = new function() {
 			//console.log(timeout);
 			timer = setTimeout(
 				function() {
-					world.markIncident(data[key], live);
+					world.markIncidents([data[key]], live);
 					makeTableEntry(generateTableEntry(data[key]));
 					key++;
 					delayedMarking(data, live);
@@ -127,9 +127,10 @@ var world = new function() {
 		} else {
 			// mark all incidents at once if timeout interval is 0
 			if (timeout == 0) {
+				world.markIncidents(data.slice(key), live, true);
+
 				var tableEntries = [];
 				for (var i = key; i < data.length; i++) {
-					world.markIncident(data[i], live, true);
 					tableEntries.push(generateTableEntry(data[i]));
 				}
 				makeTableEntry(tableEntries);
@@ -228,9 +229,9 @@ var world = new function() {
 	}
 	
 	/**
-	 * Mark an incident on the 2d map, the street map and the 3d globe
+	 * Mark incidents on all loaded views
 	 */
-	this.markIncident = function(data, live, noAnimation) {
+	this.markIncidents = function(data, live, noAnimation) {
 		// remove alert saying "Waiting for attacks..."
 		$("#tableWaitingAlert").remove();
 
@@ -239,21 +240,26 @@ var world = new function() {
 	
 		// define source color and label
 		var sourceColor = "red";
-		data.src.label = getLabel(data, live);
+		for (var i in data)
+			data[i].src.label = getLabel(data[i], live);
 		
 		// each view has it own marker key
 		var keys = [];
 
 		// add marker to all views ..
 		for (var i in views) {
-			keys[i] = views[i].addIncident(data, sourceColor);
+			keys[i] = views[i].addIncidents(data, sourceColor);
 		}
 
 		// .. and try to animate it
 		if (!noAnimation && views[currentView] && views[currentView].viewOptions.hasMarker && !views[currentView].viewOptions.animatesMarker) {
-			var pos = views[currentView].getPosition(data.src.ll[0], data.src.ll[1]);
-			if (pos != undefined)
-				animateMarker(pos.x, pos.y, sourceColor, views[currentView].container, keys[currentView]);
+			var j = 0;
+			for (var i in data) {
+				var pos = views[currentView].getPosition(data[i].src.ll[0], data[i].src.ll[1]);
+				if (pos != undefined)
+					animateMarker(pos.x, pos.y, sourceColor, views[currentView].container, keys[currentView][j]);
+				j++;
+			}
 		}
 		
 		// set timeout to remove marker if in live view
@@ -267,7 +273,7 @@ var world = new function() {
 					// remove marker on views
 					for (var i in keys) {
 						if (keys[i] != undefined)
-							views[i].removeMarker(keys[i]);
+							views[i].removeMarkers(keys[i]);
 					}
 				},
 				expireTime
@@ -275,21 +281,25 @@ var world = new function() {
 		}
 	}
 
-	function attackNumberHashAdd(data) {
-		var llHash = new String(data.src.ll[0]) + "_" + new String(data.src.ll[1]);
-		if (attackNumberHash[llHash] != undefined) {
-			attackNumberHash[llHash]++;
-		} else {
-			attackNumberHash[llHash] = 1;
+	function attackNumberHashAdd(arr) {
+		for (var i in arr) {
+			var llHash = new String(arr[i].src.ll[0]) + "_" + new String(arr[i].src.ll[1]);
+			if (attackNumberHash[llHash] != undefined) {
+				attackNumberHash[llHash]++;
+			} else {
+				attackNumberHash[llHash] = 1;
+			}
 		}
 	}
 
-	function attackNumberHashRemove(data) {
-		var llHash = new String(data.src.ll[0]) + "_" + new String(data.src.ll[1]);
-		if (attackNumberHash[llHash] > 0) {
-			attackNumberHash[llHash]--;
-		} else {
-			attackNumberHash[llHash] = undefined;
+	function attackNumberHashRemove(arr) {
+		for (var i in arr) {
+			var llHash = new String(arr[i].src.ll[0]) + "_" + new String(arr[i].src.ll[1]);
+			if (attackNumberHash[llHash] > 0) {
+				attackNumberHash[llHash]--;
+			} else {
+				attackNumberHash[llHash] = undefined;
+			}
 		}
 	}
 

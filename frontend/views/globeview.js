@@ -103,23 +103,34 @@ var GlobeView = function(controller, container) {
 	}
 	
 	/**
-	 * Mark incident on the map
+	 * Mark incidents on the map
 	 */
-	this.addIncident = function(data, color) {
-		console.log("globeview.addIncident", arguments);
+	this.addIncidents = function(arr, color) {
+		console.log("globeview.addIncidents", arguments);
 		if (globe.addMarker == undefined) return;
-		var cc = data.src.cc;
-		var ll = data.src.ll;
-		var label = data.src.label;
-		return globe.addMarker(cc, ll[0], ll[1], label);
+
+		var ret = [];
+		for (var i in arr) {
+			var data = arr[i];
+
+			var cc = data.src.cc;
+			var ll = data.src.ll;
+			var label = data.src.label;
+
+			var key = globe.addMarker(cc, ll[0], ll[1], label);
+			ret.push(key);
+		}
+
+		return ret;
 	}
 	
 	/**
-	 * Remove marker
+	 * Remove markers
 	 */
-	this.removeMarker = function(key) {
-		console.log("globeview.removeMarker", arguments);
-		globe.removeMarker(key);
+	this.removeMarkers = function(keys) {
+		console.log("globeview.removeMarkers", arguments);
+		for (var i in keys)
+			globe.removeMarker(keys[i]);
 	}
 	
 	/**

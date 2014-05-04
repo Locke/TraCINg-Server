@@ -139,47 +139,56 @@ var map = function(controller, container, map, backgroundColor) {
 	}
 	
 	/**
-	 * Mark incident on the map and update incidentsPerCountry
+	 * Mark incidents on the map and update incidentsPerCountry
 	 */
-	this.addIncident = function(data, color) {
-		var cc = data.src.cc;
-		var ll = data.src.ll;
-		var label = data.src.label;
+	this.addIncidents = function(arr, color) {
+		var ret = [];
 
-		// if the marker is already in use remove it first
-		if (mapObject.markers[uniqueKey] != undefined) {
-			removeMarker(uniqueKey);
+		for (var i in arr) {
+			var data = arr[i];
+			var cc = data.src.cc;
+			var ll = data.src.ll;
+			var label = data.src.label;
+
+			// if the marker is already in use remove it first
+			if (mapObject.markers[uniqueKey] != undefined) {
+				removeMarkers([uniqueKey]);
+			}
+			incidents++;
+			incidentsPerCountry[cc] = (incidentsPerCountry[cc] | 0) + 1;
+			countryCode[uniqueKey] = cc;
+			mapObject.addMarker(uniqueKey, {latLng: ll, style: {r: 5, fill: color}, name: label}, []);
+
+			// redraw the region coloring
+			// TODO consider doing this not on every new incident
+			redrawIncidentsPerCountry();
+
+			var returnMarker = uniqueKey;
+			// increment key
+			uniqueKey = (uniqueKey + 1) % maxKey;
+
+			ret.push(returnMarker);
 		}
-		incidents++;
-		incidentsPerCountry[cc] = (incidentsPerCountry[cc] | 0) + 1;
-		countryCode[uniqueKey] = cc;
-		mapObject.addMarker(uniqueKey, {latLng: ll, style: {r: 5, fill: color}, name: label}, []);
 
-		// redraw the region coloring
-		// TODO consider doing this not on every new incident
-		redrawIncidentsPerCountry();
-
-		var returnMarker = uniqueKey;
-		// increment key
-		uniqueKey = (uniqueKey + 1) % maxKey;
-
-		return returnMarker;
+		return ret;
 	}
 	
 	/**
-	 * Remove marker
+	 * Remove markers
 	 */
-	function removeMarker(key) {
-		var cc = countryCode[key];
-		if (incidentsPerCountry[cc] > 0) {
-			incidents--;
-			incidentsPerCountry[cc] = incidentsPerCountry[cc] - 1;
-			mapObject.removeMarkers([key]);
-			redrawIncidentsPerCountry();
+	function removeMarkers(keys) {
+		for (var i in keys) {
+			var key = keys[i];
+			var cc = countryCode[key];
+			if (incidentsPerCountry[cc] > 0) {
+				incidents--;
+				incidentsPerCountry[cc] = incidentsPerCountry[cc] - 1;
+				mapObject.removeMarkers([key]);
+				redrawIncidentsPerCountry();
+			}
 		}
-		
 	}
-	this.removeMarker = removeMarker;
+	this.removeMarkers = removeMarkers;
 	
 	/**
 	 * Get the pixel position of a geographic point

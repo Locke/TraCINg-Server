@@ -168,7 +168,7 @@ socket.on("incidents", function (data) {
 // set marks on realtime attacks
 socket.on("markIncident", function(data) {
 	if (live) {
-		world.markIncident(data, live);
+		world.markIncidents([data], live);
 		var tableEntry = world.generateTableEntry(data);
 		world.makeTableEntry(tableEntry);
 	}
