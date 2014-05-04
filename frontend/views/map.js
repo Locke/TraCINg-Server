@@ -141,9 +141,10 @@ var map = function(controller, container, map, backgroundColor) {
 	/**
 	 * Mark incident on the map and update incidentsPerCountry
 	 */
-	this.addIncident = function(data, color, label) {
+	this.addIncident = function(data, color) {
 		var cc = data.src.cc;
 		var ll = data.src.ll;
+		var label = data.src.label;
 
 		// if the marker is already in use remove it first
 		if (mapObject.markers[uniqueKey] != undefined) {

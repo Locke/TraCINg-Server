@@ -239,14 +239,14 @@ var world = new function() {
 	
 		// define source color and label
 		var sourceColor = "red";
-		var sourceLabel = getLabel(data, live);
+		data.src.label = getLabel(data, live);
 		
 		// each view has it own marker key
 		var keys = [];
 
 		// add marker to views and try to animate it
 		for (var i in views) {
-			keys[i] = views[i].addIncident(data, sourceColor, sourceLabel);
+			keys[i] = views[i].addIncident(data, sourceColor);
 			if (currentView == i && !noAnimation && views[i].viewOptions.hasMarker && !views[i].viewOptions.animatesMarker) {
 				var pos = views[i].getPosition(data.src.ll[0], data.src.ll[1]);
 				if (pos != undefined)
@@ -291,6 +291,11 @@ var world = new function() {
 		}
 	}
 
+	function attackNumberHashGet(data) {
+		var llHash = new String(data.src.ll[0]) + "_" + new String(data.src.ll[1]);
+		return attackNumberHash[llHash];
+	}
+
 	/**
 	 * State whether the current view has at least one marker
 	 */
@@ -332,8 +337,7 @@ var world = new function() {
 			label += "Live data";
 		else
 			label += "Database data";
-		var llKey = new String(data.src.ll[0]) + "_" + new String(data.src.ll[1]);
-		var num = attackNumberHash[llKey];
+		var num = attackNumberHashGet(data);
 		if (num != null) {
 			if (num == 1)
 				label += ": " + num + " attack";

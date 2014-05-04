@@ -71,7 +71,7 @@ var sampleview = function(controller, container) {
 	 * 
 	 * return value is used to call removeMarker; do not return anything if you want to store the incident
 	 */
-	this.addIncident = function(data, color, label) {
+	this.addIncident = function(data, color) {
 		console.log("sampleview.addIncident", arguments);
 		return 0;
 	}

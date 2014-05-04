@@ -82,9 +82,10 @@ var streetmap = function(controller, container) {
 	/*
 	 * mark incident on the map
 	 */
-	this.addIncident = function(data, color, label) {
+	this.addIncident = function(data, color) {
 		var cc = data.src.cc;
 		var ll = data.src.ll;
+		var label = data.src.label;
 		
 		incidents++;
 		

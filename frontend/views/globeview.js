@@ -105,11 +105,12 @@ var GlobeView = function(controller, container) {
 	/**
 	 * Mark incident on the map
 	 */
-	this.addIncident = function(data, color, label) {
+	this.addIncident = function(data, color) {
 		console.log("globeview.addIncident", arguments);
 		if (globe.addMarker == undefined) return;
 		var cc = data.src.cc;
 		var ll = data.src.ll;
+		var label = data.src.label;
 		return globe.addMarker(cc, ll[0], ll[1], label);
 	}
 	
