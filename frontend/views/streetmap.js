@@ -20,7 +20,8 @@ var streetmap = function(controller, container) {
 	var self = this;
 
 	this.viewOptions = {
-		animatesMarker: false, // map does not animate them -> world should do it
+		hasMarker: true,	// the view does display markers
+		animatesMarker: false,	// map does not animate them -> world should do it
 	};
 	this.container = container;
 
@@ -81,7 +82,9 @@ var streetmap = function(controller, container) {
 	/*
 	 * mark incident on the map
 	 */
-	this.addMarker = function(cc, ll, color, label) {
+	this.addIncident = function(data, color, label) {
+		var cc = data.src.cc;
+		var ll = data.src.ll;
 		
 		incidents++;
 		

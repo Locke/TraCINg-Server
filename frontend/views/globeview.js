@@ -22,7 +22,8 @@ var GlobeView = function(controller, container) {
 	var container = container;
 
 	this.viewOptions = {
-		animatesMarker: true, // globe animates them -> world shouldn't do it
+		hasMarker: true,	// the view does display markers
+		animatesMarker: true,	// globe animates them -> world shouldn't do it
 	};
 	this.container = container;
 
@@ -104,9 +105,11 @@ var GlobeView = function(controller, container) {
 	/**
 	 * Mark incident on the map
 	 */
-	this.addMarker = function(cc, ll, color, label) {
-		console.log("globeview.addMarker", arguments);
+	this.addIncident = function(data, color, label) {
+		console.log("globeview.addIncident", arguments);
 		if (globe.addMarker == undefined) return;
+		var cc = data.src.cc;
+		var ll = data.src.ll;
 		return globe.addMarker(cc, ll[0], ll[1], label);
 	}
 	

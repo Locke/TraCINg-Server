@@ -26,7 +26,8 @@ var map = function(controller, container, map, backgroundColor) {
 	var self = this;
 
 	this.viewOptions = {
-		animatesMarker: false, // map does not animate them -> world should do it
+		hasMarker: true,	// the view does display markers
+		animatesMarker: false,	// map does not animate them -> world should do it
 	};
 	this.container = container;
 
@@ -138,9 +139,12 @@ var map = function(controller, container, map, backgroundColor) {
 	}
 	
 	/**
-	 * Mark incident on the map
+	 * Mark incident on the map and update incidentsPerCountry
 	 */
-	this.addMarker = function(cc, ll, color, label) {
+	this.addIncident = function(data, color, label) {
+		var cc = data.src.cc;
+		var ll = data.src.ll;
+
 		// if the marker is already in use remove it first
 		if (mapObject.markers[uniqueKey] != undefined) {
 			removeMarker(uniqueKey);
@@ -149,15 +153,15 @@ var map = function(controller, container, map, backgroundColor) {
 		incidentsPerCountry[cc] = (incidentsPerCountry[cc] | 0) + 1;
 		countryCode[uniqueKey] = cc;
 		mapObject.addMarker(uniqueKey, {latLng: ll, style: {r: 5, fill: color}, name: label}, []);
-		
+
 		// redraw the region coloring
 		// TODO consider doing this not on every new incident
 		redrawIncidentsPerCountry();
-		
+
 		var returnMarker = uniqueKey;
 		// increment key
 		uniqueKey = (uniqueKey + 1) % maxKey;
-		
+
 		return returnMarker;
 	}
 	

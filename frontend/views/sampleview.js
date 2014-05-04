@@ -22,7 +22,8 @@ var sampleview = function(controller, container) {
 	var self = this;
 
 	this.viewOptions = {
-		animatesMarker: false, // does not animate them -> world should do it
+		hasMarker: false,	// the view does not display any markers
+		animatesMarker: false,	// does not animate them -> world should do it
 	};
 	this.container = container;
 
@@ -67,9 +68,11 @@ var sampleview = function(controller, container) {
 	
 	/**
 	 * Mark incident on the map
+	 * 
+	 * return value is used to call removeMarker; do not return anything if you want to store the incident
 	 */
-	this.addMarker = function(cc, ll, color, label) {
-		console.log("sampleview.addMarker", arguments);
+	this.addIncident = function(data, color, label) {
+		console.log("sampleview.addIncident", arguments);
 		return 0;
 	}
 	
