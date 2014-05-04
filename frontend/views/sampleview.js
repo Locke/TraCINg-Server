@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-var sampleview = function(controller) {
+var sampleview = function(controller, container) {
 	console.log("sampleview", arguments);
 
 	var self = this;
@@ -24,7 +24,7 @@ var sampleview = function(controller) {
 	this.viewOptions = {
 		animatesMarker: false, // does not animate them -> world should do it
 	};
-	this.container = undefined;
+	this.container = container;
 
 	this.controllerCallbacks = {
 		zoom: function(dir) {
@@ -37,6 +37,12 @@ var sampleview = function(controller) {
 			console.log("sampleview.controllerCallbacks.toggle", arguments);
 		},
 	};
+
+	this.initialized = false;
+	this.initialize = function() {
+		console.log("sampleview.initialize", arguments);
+		this.initialized = true;
+	}
 
 	/**
 	 * Reset the map removing every point
@@ -79,7 +85,7 @@ var sampleview = function(controller) {
 	 */
 	this.getPosition = function(latitude, longitude) {
 		console.log("sampleview.getPosition", arguments);
-		return {x: 0, y: 0};
+		return undefined;
 	}
 	
 	
@@ -89,5 +95,9 @@ var sampleview = function(controller) {
 	this.hasMarker = function() {
 		console.log("sampleview.hasMarker", arguments);
 		return false;
+	}
+
+	this.resize = function() {
+		console.log("sampleview.resize", arguments);
 	}
 }

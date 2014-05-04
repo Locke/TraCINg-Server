@@ -254,7 +254,8 @@ var world = new function() {
 			keys[i] = views[i].addMarker(data.src.cc, data.src.ll, sourceColor, sourceLabel);
 			if (currentView == i && !noAnimation && !views[i].viewOptions.animatesMarker) {
 				var pos = views[i].getPosition(data.src.ll[0], data.src.ll[1]);
-				animateMarker(pos.x, pos.y, sourceColor, views[i].container, keys[i]);
+				if (pos != undefined)
+					animateMarker(pos.x, pos.y, sourceColor, views[i].container, keys[i]);
 			}
 		}
 		
