@@ -235,12 +235,7 @@ var world = new function() {
 		$("#tableWaitingAlert").remove();
 
 		// update hashmap for displaying number of attacks per LatLng
-		llHash = new String(data.src.ll[0]) + "_" + new String(data.src.ll[1]);
-		if (attackNumberHash[llHash] != undefined) {
-			attackNumberHash[llHash]++;
-		} else {
-			attackNumberHash[llHash] = 1;
-		}
+		attackNumberHashAdd(data);
 	
 		// define source color and label
 		var sourceColor = "red";
@@ -265,12 +260,7 @@ var world = new function() {
 			setTimeout(
 				function() {
 					// update hashmap for displaying number of attacks per LatLng
-					llHash = new String(data.src.ll[0]) + "_" + new String(data.src.ll[1]);
-					if (attackNumberHash[llHash] > 0) {
-						attackNumberHash[llHash]--;
-					} else {
-						attackNumberHash[llHash] = undefined;
-					}
+					attackNumberHashRemove(data);
 
 					// remove marker on views
 					for (var i in keys) {
@@ -280,6 +270,24 @@ var world = new function() {
 				},
 				expireTime
 			);
+		}
+	}
+
+	function attackNumberHashAdd(data) {
+		var llHash = new String(data.src.ll[0]) + "_" + new String(data.src.ll[1]);
+		if (attackNumberHash[llHash] != undefined) {
+			attackNumberHash[llHash]++;
+		} else {
+			attackNumberHash[llHash] = 1;
+		}
+	}
+
+	function attackNumberHashRemove(data) {
+		var llHash = new String(data.src.ll[0]) + "_" + new String(data.src.ll[1]);
+		if (attackNumberHash[llHash] > 0) {
+			attackNumberHash[llHash]--;
+		} else {
+			attackNumberHash[llHash] = undefined;
 		}
 	}
 
