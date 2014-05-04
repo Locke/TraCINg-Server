@@ -132,6 +132,7 @@ var GlobeView = function(controller, container) {
 
 	this.resize = function() {
 		console.log("globeview.resize", arguments);
+		if (globe.resize == undefined) return;
 		globe.resize();
 	}
 

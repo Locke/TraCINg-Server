@@ -32,9 +32,6 @@ var world = new function() {
 	this.view = view;					// export possible views
 	var currentView;
 
-	var globeObject;						// the 3d globe
-	var mapObject;							// the 2d map
-	var streetmapObject;					// the street map
 	var timeout = 500;						// timeout interval
 	var timer = null;						// timeout id
 	var key = 0;							// current key for delayed database request
@@ -58,51 +55,35 @@ var world = new function() {
 		controller.unregisterCallbacks();
 	}
 
-	/**
-	 * Show 2d map
-	 */
-	function showMap() {
-		if (mapObject === undefined) {
-			mapObject = new map(controller, $('#map'), 'world_mill_en', 'navy');
-			views[view.MAP] = mapObject;
-		}
-		currentView = view.MAP;
-		controller.registerCallbacks(views[view.MAP].controllerCallbacks);
-	}
 
-	/**
-	 * Show streetmap
-	 */
-	function showStreetmap() {
-		if (streetmapObject === undefined) {
-			streetmapObject = new streetmap(controller, $('#streetmap'));
-			views[view.STREETMAP] = streetmapObject;
-		}
-		currentView = view.STREETMAP;
-		controller.registerCallbacks(views[view.STREETMAP].controllerCallbacks);
-	}
+	this.initializeView = function(v) {
+		// check if view is already initialized
+		if (views[v] != undefined)
+			return;
 
-	/**
-	 * Show 3d globe
-	 */
-	function showGlobe() {
-		if (globeObject === undefined) {
-			globeObject = new GlobeView(controller, $('#globe'));
-			views[view.GLOBE] = globeObject;
-		}
-		else {
-			globeObject.resize();
-		}
-		currentView = view.GLOBE;
-		controller.registerCallbacks(views[view.GLOBE].controllerCallbacks);
+		if (v == view.MAP)
+			views[v] = new map(controller, $('#map'), 'world_mill_en', 'navy');
+		else if (v == view.STREETMAP)
+			views[v] = new streetmap(controller, $('#streetmap'));
+		else if (v == view.GLOBE)
+			views[v] = new GlobeView(controller, $('#globe'));
+		else
+			console.err("Unknown view: " + v);
 	}
 
 	this.show = function(v) {
-		if (v == view.MAP) showMap();
-		else if (v == view.STREETMAP) showStreetmap();
-		else if (v == view.GLOBE) showGlobe();
-		else if (v == view.NULL) leaveMap();
-		else { console.err("Unknown view: " + v); leaveMap(); }
+		if (v == view.NULL) {
+			leaveMap();
+			return;
+		}
+
+		this.initializeView(v);
+		currentView = v;
+		controller.registerCallbacks(views[v].controllerCallbacks);
+
+		if (v == view.GLOBE) {
+			views[v].resize();
+		}
 	}
 
 	/**
