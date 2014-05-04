@@ -235,7 +235,7 @@ var world = new function() {
 		$("#tableWaitingAlert").remove();
 
 		// update hashmap for displaying number of attacks per LatLng
-		llHash = new String(data.src.ll[0]) + new String(data.src.ll[1]);
+		llHash = new String(data.src.ll[0]) + "_" + new String(data.src.ll[1]);
 		if (attackNumberHash[llHash] != undefined) {
 			attackNumberHash[llHash]++;
 		} else {
@@ -264,7 +264,7 @@ var world = new function() {
 			setTimeout(
 				function() {
 					// update hashmap for displaying number of attacks per LatLng
-					llHash = new String(data.src.ll[0]) + new String(data.src.ll[1]);
+					llHash = new String(data.src.ll[0]) + "_" + new String(data.src.ll[1]);
 					if (attackNumberHash[llHash] > 0) {
 						attackNumberHash[llHash]--;
 					} else {
@@ -323,7 +323,7 @@ var world = new function() {
 			label += "Live data";
 		else
 			label += "Database data";
-		var llKey = new String(data.src.ll[0]) + new String(data.src.ll[1]);
+		var llKey = new String(data.src.ll[0]) + "_" + new String(data.src.ll[1]);
 		var num = attackNumberHash[llKey];
 		if (num != null) {
 			if (num == 1)
