@@ -104,7 +104,7 @@ function updateHelpElements() {
 function updateMenu(tab){
 		// "2D View" entry chosen via hash, show 2D map
 		if (tab == 'map') {
-			world.show(world.view.MAP);
+			world.activateView(world.view.MAP);
 			// if there is no attack data show an info alert
 			if (!world.hasCurrentlyMarker())
 				showInfoNoData();
@@ -124,7 +124,7 @@ function updateMenu(tab){
 		}
 		// "Street View" entry chosen via hash, show streetmap
 		else if (tab == 'streetmap') {
-			world.show(world.view.STREETMAP);
+			world.activateView(world.view.STREETMAP);
 			// if there is no attack data show an info alert
 			if (!world.hasCurrentlyMarker())
 				showInfoNoData();
@@ -140,7 +140,7 @@ function updateMenu(tab){
 		}
 		// "3D View" entry chosen via hash, show 3D map
 		else if (tab == 'globe') {
-			world.show(world.view.GLOBE);
+			world.activateView(world.view.GLOBE);
 			// if there is no attack data show an info alert
 			if (!world.hasCurrentlyMarker())
 				showInfoNoData();
@@ -156,7 +156,7 @@ function updateMenu(tab){
 		}
 		// "Table View" entry chosen via hash, show table
 		else if (tab == 'table') {
-			world.show(world.view.NULL);
+			world.activateView(world.view.NULL);
 			if (help)
 				$("#helpEntry").addClass("iactive");
 			// if there is no attack data show an info alert
@@ -173,7 +173,7 @@ function updateMenu(tab){
 		}
 		// "Statistics" entry chosen via hash, show statistics
 		else if (tab == 'stats') {
-			world.show(world.view.NULL);
+			world.activateView(world.view.NULL);
 			// remove alert
 			$("#tableWaitingAlert").remove();
 			if (help)
@@ -189,7 +189,7 @@ function updateMenu(tab){
 			$("#advMarkerInfo").addClass("disabled");
 			$("#resetMap").addClass("disabled");
 		}
-		else console.log('menue: unknown tab: ' + tab);
+		else console.log('menu: unknown tab: ' + tab);
 };
 		
 $(function () {

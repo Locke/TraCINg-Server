@@ -71,7 +71,7 @@ var world = new function() {
 			console.err("Unknown view: " + v);
 	}
 
-	this.show = function(v) {
+	this.activateView = function(v) {
 		if (v == view.NULL) {
 			leaveMap();
 			return;
