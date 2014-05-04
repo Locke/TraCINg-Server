@@ -244,14 +244,16 @@ var world = new function() {
 		// each view has it own marker key
 		var keys = [];
 
-		// add marker to views and try to animate it
+		// add marker to all views ..
 		for (var i in views) {
 			keys[i] = views[i].addIncident(data, sourceColor);
-			if (currentView == i && !noAnimation && views[i].viewOptions.hasMarker && !views[i].viewOptions.animatesMarker) {
-				var pos = views[i].getPosition(data.src.ll[0], data.src.ll[1]);
-				if (pos != undefined)
-					animateMarker(pos.x, pos.y, sourceColor, views[i].container, keys[i]);
-			}
+		}
+
+		// .. and try to animate it
+		if (!noAnimation && views[currentView] && views[currentView].viewOptions.hasMarker && !views[currentView].viewOptions.animatesMarker) {
+			var pos = views[currentView].getPosition(data.src.ll[0], data.src.ll[1]);
+			if (pos != undefined)
+				animateMarker(pos.x, pos.y, sourceColor, views[currentView].container, keys[currentView]);
 		}
 		
 		// set timeout to remove marker if in live view
