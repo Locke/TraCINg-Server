@@ -142,51 +142,60 @@ var map = function(controller, container, map, backgroundColor) {
 	 * Mark incidents on the map and update incidentsPerCountry
 	 */
 	this.addIncidents = function(arr, color) {
-		var ret = [];
+		var keys = [];
+		var markers = {};
+
+		incidents += arr.length;
 
 		for (var i in arr) {
 			var data = arr[i];
-			var cc = data.src.cc;
-			var ll = data.src.ll;
-			var label = data.src.label;
 
-			// if the marker is already in use remove it first
-			if (mapObject.markers[uniqueKey] != undefined) {
-				removeMarkers([uniqueKey]);
-			}
-			incidents++;
-			incidentsPerCountry[cc] = (incidentsPerCountry[cc] | 0) + 1;
-			countryCode[uniqueKey] = cc;
-			mapObject.addMarker(uniqueKey, {latLng: ll, style: {r: 5, fill: color}, name: label}, []);
+			var key = uniqueKey;
+			keys.push(key);
 
-			// redraw the region coloring
-			// TODO consider doing this not on every new incident
-			redrawIncidentsPerCountry();
-
-			var returnMarker = uniqueKey;
 			// increment key
 			uniqueKey = (uniqueKey + 1) % maxKey;
 
-			ret.push(returnMarker);
+			var cc = data.src.cc;
+			incidentsPerCountry[cc] = (incidentsPerCountry[cc] | 0) + 1;
+			countryCode[key] = cc;
+
+			var ll = data.src.ll;
+			var label = data.src.label;
+			markers[key] = {latLng: ll, style: {r: 5, fill: color}, name: label};
 		}
 
-		return ret;
+		mapObject.addMarkers(markers, []);
+
+		// redraw the region coloring
+		redrawIncidentsPerCountry();
+
+		return keys;
 	}
 	
 	/**
 	 * Remove markers
 	 */
 	function removeMarkers(keys) {
+		incidents -= keys.length;
+
+		var remove = [];
+
 		for (var i in keys) {
 			var key = keys[i];
+
+			if (mapObject.markers[key] != undefined)
+				remove.push(key);
+
 			var cc = countryCode[key];
 			if (incidentsPerCountry[cc] > 0) {
-				incidents--;
 				incidentsPerCountry[cc] = incidentsPerCountry[cc] - 1;
-				mapObject.removeMarkers([key]);
-				redrawIncidentsPerCountry();
 			}
 		}
+
+		mapObject.removeMarkers(remove);
+
+		redrawIncidentsPerCountry();
 	}
 	this.removeMarkers = removeMarkers;
 	
