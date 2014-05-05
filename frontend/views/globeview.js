@@ -22,8 +22,9 @@ var GlobeView = function(controller, container) {
 	var container = container;
 
 	this.viewOptions = {
-		hasMarker: true,	// the view does display markers
-		animatesMarker: true,	// globe animates them -> world shouldn't do it
+		hasMarker: true,		// the view does display markers
+		animatesMarker: true,		// globe animates them -> world shouldn't do it
+		showAdvMarkerInfo: true,	// enable advMarkerInfo button
 	};
 	this.container = container;
 

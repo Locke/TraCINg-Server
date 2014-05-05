@@ -320,6 +320,16 @@ var world = new function() {
 		}
 		return false;
 	}
+
+	/**
+	 * State whether the current view want to enable advMarkerInfo button
+	 */
+	this.showAdvMarkerInfo = function() {
+		if (views[currentView] != undefined) {
+			return views[currentView].viewOptions.showAdvMarkerInfo;
+		}
+		return false;
+	}
 	
 	/**
 	 * Reset every incident

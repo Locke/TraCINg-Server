@@ -20,8 +20,9 @@ var streetmap = function(controller, container) {
 	var self = this;
 
 	this.viewOptions = {
-		hasMarker: true,	// the view does display markers
-		animatesMarker: false,	// map does not animate them -> world should do it
+		hasMarker: true,		// the view does display markers
+		animatesMarker: false,		// map does not animate them -> world should do it
+		showAdvMarkerInfo: true,	// enable advMarkerInfo button
 	};
 	this.container = container;
 

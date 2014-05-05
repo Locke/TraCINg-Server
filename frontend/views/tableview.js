@@ -23,8 +23,9 @@ var TableView = function(controller, container) {
 	var attackTable;
 
 	this.viewOptions = {
-		hasMarker: false,	// the view does not display any markers..
-		animatesMarker: false,	// .. and therefore does not animate them
+		hasMarker: false,		// the view does not display any markers..
+		animatesMarker: false,		// .. and therefore does not animate them
+		showAdvMarkerInfo: false,	// disable advMarkerInfo button
 	};
 	this.container = container;
 

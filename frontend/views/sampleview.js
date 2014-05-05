@@ -22,8 +22,9 @@ var sampleview = function(controller, container) {
 	var self = this;
 
 	this.viewOptions = {
-		hasMarker: false,	// the view does not display any markers
-		animatesMarker: false,	// does not animate them -> world should do it
+		hasMarker: false,		// the view does not display any markers
+		animatesMarker: false,		// does not animate them -> world should do it
+		showAdvMarkerInfo: false,	// disable advMarkerInfo button
 	};
 	this.container = container;
 

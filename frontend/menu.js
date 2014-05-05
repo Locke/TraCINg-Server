@@ -121,7 +121,12 @@ function updateMenu(tab){
 
 			// set left window and toogleLive
 			updateWins("dbWin", !live, true, !live && requestAttackUpdate);
-			$("#advMarkerInfo").removeClass("disabled");
+
+			if (world.showAdvMarkerInfo())
+				$("#advMarkerInfo").removeClass("disabled");
+			else
+				$("#advMarkerInfo").addClass("disabled");
+
 			$("#resetMap").removeClass("disabled");
 		}
 		// "Table View" entry chosen via hash, show table
