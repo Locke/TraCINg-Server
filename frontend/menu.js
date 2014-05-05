@@ -126,7 +126,7 @@ function updateMenu(tab){
 		}
 		// "Table View" entry chosen via hash, show table
 		else if (tab == 'table') {
-			world.activateView(world.view.NULL);
+			world.activateView(world.view.TABLE);
 			if (help)
 				$("#helpEntry").addClass("iactive");
 			// if there is no attack data show an info alert

@@ -27,7 +27,8 @@ var world = new function() {
 		MAP: 0,
 		STREETMAP: 1,
 		GLOBE: 2,
-		NULL: 3,
+		TABLE: 3,
+		NULL: 4,
 	};
 	this.view = view;					// export possible views
 	var currentView;
@@ -67,6 +68,8 @@ var world = new function() {
 			views[v] = new streetmap(controller, $('#streetmap'));
 		else if (v == view.GLOBE)
 			views[v] = new GlobeView(controller, $('#globe'));
+		else if (v == view.TABLE)
+			views[v] = new TableView(controller, $('#table'));
 		else
 			console.err("Unknown view: " + v);
 	}
