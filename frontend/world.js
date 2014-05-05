@@ -309,11 +309,11 @@ var world = new function() {
 	}
 
 	/**
-	 * State whether the current view has at least one marker
+	 * State whether the current view has at least one incident
 	 */
-	this.hasCurrentlyMarker = function() {
+	this.hasCurrentlyIncidents = function() {
 		if (views[currentView] != undefined) {
-			return views[currentView].hasMarker();
+			return views[currentView].hasIncidents();
 		}
 		return false;
 	}

@@ -109,7 +109,7 @@ function updateMenu(tab){
 			else if (tab == 'globe') world.activateView(world.view.GLOBE);
 
 			// if there is no attack data show an info alert
-			if (!world.hasCurrentlyMarker())
+			if (!world.hasCurrentlyIncidents())
 				showInfoNoData();
 			// if there is attack data remove the info alert
 			else

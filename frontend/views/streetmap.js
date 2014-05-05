@@ -183,9 +183,9 @@ var streetmap = function(controller, container) {
 	}
 	
 	/*
-	 * State whether any country has at least one marker
+	 * State whether the view has incidents
 	 */
-	this.hasMarker = function() {
+	this.hasIncidents = function() {
 		if (incidents > 0)
 			return true;
 		return false;

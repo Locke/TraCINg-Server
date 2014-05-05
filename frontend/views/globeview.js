@@ -143,10 +143,10 @@ var GlobeView = function(controller, container) {
 	
 	
 	/**
-	 * State whether any country has at least one marker
+	 * State whether the view has incidents
 	 */
-	this.hasMarker = function() {
-		console.log("globeview.hasMarker", arguments);
+	this.hasIncidents = function() {
+		console.log("globeview.hasIncidents", arguments);
 		if (globe.hasMarker == undefined) return false;
 		return globe.hasMarker();
 	}
