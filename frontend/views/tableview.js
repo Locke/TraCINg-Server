@@ -20,6 +20,7 @@ var TableView = function(controller, container) {
 	console.log("tableview", arguments);
 
 	var self = this;
+	var attackTable;
 
 	this.viewOptions = {
 		hasMarker: false,	// the view does not display any markers..
@@ -44,6 +45,15 @@ var TableView = function(controller, container) {
 	this.initialized = false;
 	this.initialize = function() {
 		console.log("tableview.initialize", arguments);
+
+		attackTable = $("#attackTable").dataTable({
+			"aaSorting": [[ 3, "desc" ]], // order by date, new items first
+			"sScrollY": "100%",
+			"fnDrawCallback": function() {
+				world.makePopovers();
+			}
+		});
+
 		this.initialized = true;
 	}
 
@@ -52,6 +62,9 @@ var TableView = function(controller, container) {
 	 */
 	this.reset = function() {
 		console.log("tableview.reset", arguments);
+
+		// reset table
+		attackTable.fnClearTable();
 	}
 	
 	/**
@@ -69,10 +82,26 @@ var TableView = function(controller, container) {
 	 */
 	this.hasIncidents = function() {
 		console.log("tableview.hasIncidents", arguments);
-		return false;
+
+		return ($("#table .dataTables_empty").length == 0);
+	}
+
+
+	function updateAttackTableHeight() {
+		var height = $(window).height();
+
+		height -= $("#table .dataTables_scrollBody").offset().top;
+		height -= $("#table .dataTables_scroll + div").height();
+
+		console.log("attackTableHeight: " + height);
+
+		$("#table .dataTables_scrollBody").css({"max-height": height});
 	}
 
 	this.resize = function() {
 		console.log("tableview.resize", arguments);
+
+		updateAttackTableHeight();
+		attackTable.fnDraw();
 	}
 }

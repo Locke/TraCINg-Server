@@ -330,9 +330,6 @@ var world = new function() {
 			views[key].reset();
 		}
 
-		// reset table
-		$("#attackTable").dataTable().fnClearTable();
-
 		attackNumberHash = {};
 
 		// reset progress bar
@@ -504,25 +501,12 @@ var world = new function() {
 	}
 	
 
-	function updateAttackTableHeight() {
-		var attackTable = $("#attackTable").dataTable();
-	
-		var height = $(window).height();
-	
-		height -= $("#table .dataTables_scrollBody").offset().top;
-		height -= $("#table .dataTables_scroll + div").height();
-	
-		console.log("attackTableHeight: " + height);
-	
-		$("#table .dataTables_scrollBody").css({"max-height": height});
-	}
 
 	/**
 	 * resize table
 	 */
 	function resizeTable() {
-		updateAttackTableHeight();
-		$("#attackTable").dataTable().fnDraw();
+		if (views[view.TABLE]) views[view.TABLE].resize();
 	}
 	this.resizeTable = resizeTable;
 }
@@ -538,13 +522,7 @@ function showLog(id){
 }
 
 $(function(){
-	$("#attackTable").dataTable({
-		"aaSorting": [[ 3, "desc" ]], // order by date, new items first
-		"sScrollY": "100%",
-		"fnDrawCallback": function() {
-			world.makePopovers();
-		}
-	});
+	world.initializeView(world.view.TABLE);
 
 	setTimeout(function() {
 		world.resizeTable();

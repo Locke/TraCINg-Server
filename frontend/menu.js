@@ -130,7 +130,7 @@ function updateMenu(tab){
 			if (help)
 				$("#helpEntry").addClass("iactive");
 			// if there is no attack data show an info alert
-			if ($("#table .dataTables_empty").length > 0)
+			if (!world.hasCurrentlyIncidents())
 				showInfoNoData();
 			// if there is attack data remove the info alert
 			else
