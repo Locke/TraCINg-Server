@@ -169,8 +169,6 @@ socket.on("incidents", function (data) {
 socket.on("markIncident", function(data) {
 	if (live) {
 		world.markIncidents([data], live);
-		var tableEntry = world.generateTableEntry(data);
-		world.makeTableEntry(tableEntry);
 	}
 });
 

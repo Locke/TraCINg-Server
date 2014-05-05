@@ -70,12 +70,19 @@ var TableView = function(controller, container) {
 	
 	/**
 	 * add incidents to the table
-	 * 
-	 * return undefined to indicate that the incidents should stay in live view
 	 */
 	this.addIncidents = function(arr, color) {
 		console.log("tableview.addIncidents", arguments);
-		return undefined;
+
+		var rows = [];
+		for (var i in arr) {
+			rows.push(generateTableEntry(arr[i]));
+		}
+		$("#attackTable").dataTable().fnAddData(rows);
+
+		world.makePopovers();
+
+		return undefined; // undefined to indicate that the incidents should stay in live view
 	}
 	
 	/**
@@ -104,5 +111,55 @@ var TableView = function(controller, container) {
 
 		updateAttackTableHeight();
 		attackTable.fnDraw();
+	}
+
+
+
+	/**
+	 * Generate one table entry and return it as a string to be inserted
+	 */
+	function generateTableEntry(incident) {
+		// set city and country names
+		if (incident.src.city == undefined)
+			incident.src.city = "";
+		if (incident.dst.country == undefined)
+			incident.dst.country = "";
+		if (incident.dst.city == undefined)
+			incident.dst.city = "";
+		if (incident.src.port == 0)
+			incident.src.port = "";
+		if (incident.dst.port == 0)
+			incident.dst.port = "";
+
+		//format date
+		dateFormat = world.formatDate(incident);
+
+		var log = '';
+		if (incident.hasLog){
+			log = "<a href='#showLog' data-toggle='modal' onclick='javascript:showLog(" + incident.id + ");'>show log</a>";
+		}
+
+		var type = typeid2str(incident.type);
+		var typeDescr = typeid2descr(incident.type);
+
+		// popup for md5sum so it does not take so much space in the table
+		var md5 = "";
+		if (incident.md5sum && incident.md5sum != '') {
+			var virustotalLink = "https://www.virustotal.com/en/search/?query=" + incident.md5sum;
+			var popoverContent = "Md5sum of malware hash: " + incident.md5sum + "<br \\> Get more information about this malware from virustotal: <a href=\'" + virustotalLink + "\' target='_blank'>Click here</a> (by doing so you will open a different website)!";
+			var url = "\"./extern/bootstrap/images/glyphicons-halflings.png\"";
+			md5 = "<a class='btn' rel='popover' data-html='true' data-content=\"" + popoverContent + "\" data-animation='false' data-placement='left'><i class='icon-info-sign' style='background-image: url("+ url +");'></i></a>";
+		}
+
+		var authorized = "";
+		if (incident.authorized) {
+			authorized = "<p class='text-success'>Yes</p>";
+		} else {
+			authorized = "<p class='text-error'>No</p>";
+		}
+
+		//make entry
+		var attackTableEntry = [incident.sensortype, incident.sensorname, '<span title="' + typeDescr + '">' + type + '</span>', dateFormat, incident.src.country, incident.src.city, incident.src.port, incident.dst.country, incident.dst.city, incident.dst.port, authorized, md5, log];
+		return attackTableEntry;
 	}
 }
