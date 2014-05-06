@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-var streetmap = function(controller, container) {
+var StreetmapView = function(container) {
 	var self = this;
 
 	this.viewOptions = {
@@ -36,20 +36,20 @@ var streetmap = function(controller, container) {
 
 	this.controllerCallbacks = {
 		zoom: function(dir) {
-			if (dir == controller.args.IN)
+			if (dir == Controller.args.IN)
 				self.zoom(1);
-			if (dir == controller.args.OUT)
+			if (dir == Controller.args.OUT)
 				self.zoom(-1);
 		},
 		move: function(dir) {
 			var speed = 120;
-			if (dir == controller.args.LEFT)
+			if (dir == Controller.args.LEFT)
 				self.move(speed,0);
-			if (dir == controller.args.RIGHT)
+			if (dir == Controller.args.RIGHT)
 				self.move(-speed, 0);
-			if (dir == controller.args.UP)
+			if (dir == Controller.args.UP)
 				self.move(0, speed);
-			if (dir == controller.args.DOWN)
+			if (dir == Controller.args.DOWN)
 				self.move(0, -speed);
 		},
 		toggle: undefined,
@@ -195,4 +195,4 @@ var streetmap = function(controller, container) {
 	this.resize = function() {
 		stmap.invalidateSize(false);
 	}
-}
+};

@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-var GlobeView = function(controller, container) {
+var GlobeView = function(container) {
 	console.log("globeview", arguments);
 	var self = this;
 	var container = container;
@@ -58,19 +58,19 @@ var GlobeView = function(controller, container) {
 
 	this.controllerCallbacks = {
 		zoom: function(dir) {
-			if (dir == controller.args.IN)
+			if (dir == Controller.args.IN)
 				self.zoom(100);
-			if (dir == controller.args.OUT)
+			if (dir == Controller.args.OUT)
 				self.zoom(-100);
 		},
 		move: function(dir) {
-			if (dir == controller.args.LEFT)
+			if (dir == Controller.args.LEFT)
 				self.rotate(-0.000001, 0);
-			if (dir == controller.args.RIGHT)
+			if (dir == Controller.args.RIGHT)
 				self.rotate(0.000001, 0);
-			if (dir == controller.args.UP)
+			if (dir == Controller.args.UP)
 				self.rotate(0, 0.0000005);
-			if (dir == controller.args.DOWN)
+			if (dir == Controller.args.DOWN)
 				self.rotate(0, -0.0000005);
 		},
 		toggle: function() {
@@ -167,4 +167,4 @@ var GlobeView = function(controller, container) {
 		console.log("globeview.rotate", arguments);
 		globe.rotate(horizAngle, vertAngle);
 	}
-}
+};

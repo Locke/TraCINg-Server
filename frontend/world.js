@@ -22,15 +22,6 @@
  */
 var world = new function() {
 
-	// constants
-	var view = {
-		MAP: 0,
-		STREETMAP: 1,
-		GLOBE: 2,
-		TABLE: 3,
-		NULL: 4,
-	};
-	this.view = view;					// export possible views
 	var currentView;
 
 	var timeout = 500;						// timeout interval
@@ -41,7 +32,7 @@ var world = new function() {
 	var attackNumberHash = {};				// hashmap containing the number of attacks per Lat/Lng position
 	var controller = new Controller();
 
-	var views = [];
+	var views = {};
 
 	/**
 	 * Toggle whether the key control is enabled or not
@@ -51,44 +42,28 @@ var world = new function() {
 	/**
 	 * Leave maps
 	 */
-	function leaveMap() {
-		currentView = view.NULL;
+	function deactivateView() {
+		currentView = null;
 		controller.unregisterCallbacks();
 	}
+	this.deactivateView = deactivateView;
 
 
-	this.loadView = function(v) {
-		// check if view is already loaded
-		if (views[v] != undefined)
-			return;
+	this.registerView = function(name, v) {
+		// check if view is already registered
+		if (views[name] != undefined)
+			return false;
 
-		if (v == view.MAP)
-			views[v] = new map(controller, $('#map'), 'world_mill_en', 'navy');
-		else if (v == view.STREETMAP)
-			views[v] = new streetmap(controller, $('#streetmap'));
-		else if (v == view.GLOBE)
-			views[v] = new GlobeView(controller, $('#globe'));
-		else if (v == view.TABLE)
-			views[v] = new TableView(controller, $('#table'));
-		else
-			console.err("Unknown view: " + v);
+		views[name] = v;
+		return true;
 	}
 
 	this.initializeView = function(v) {
-		// check if view is already initialized
-		if (views[v] == undefined)
-			this.loadView(v);
-
 		if (!views[v].initialized)
 			views[v].initialize();
 	}
 
 	this.activateView = function(v) {
-		if (v == view.NULL) {
-			leaveMap();
-			return;
-		}
-
 		this.initializeView(v);
 		currentView = v;
 		controller.registerCallbacks(views[v].controllerCallbacks);
@@ -244,7 +219,8 @@ var world = new function() {
 
 		// add marker to all views ..
 		for (var i in views) {
-			keys[i] = views[i].addIncidents(data, sourceColor);
+			if (views[i].initialized)
+				keys[i] = views[i].addIncidents(data, sourceColor);
 		}
 
 		// .. and try to animate it
@@ -451,7 +427,7 @@ var world = new function() {
 	 * resize table
 	 */
 	function resizeTable() {
-		if (views[view.TABLE]) views[view.TABLE].resize();
+		if (views['table']) views['table'].resize();
 	}
 	this.resizeTable = resizeTable;
 }
@@ -466,12 +442,19 @@ function showLog(id){
 	});
 }
 
+// TODO: may use a config file to specify which views should be used
 $(function(){
-	world.initializeView(world.view.TABLE);
+	world.registerView('map', new MapView($('#map'), 'world_mill_en', 'navy'));
+	world.registerView('streetmap', new StreetmapView($('#streetmap')));
+	world.registerView('globe', new GlobeView($('#globe')));
+	world.registerView('table', new TableView($('#table')));
+	world.initializeView('table');
 
 	setTimeout(function() {
 		world.resizeTable();
 	}, 10);
+
+	//world.registerView('sample', new SampleView($('#table')));
 });
 
 $(window).resize($.throttle(250,function() {

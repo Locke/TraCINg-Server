@@ -104,10 +104,7 @@ function updateHelpElements() {
 function updateMenu(tab){
 		// a view entry chosen via hash, activate it
 		if (tab == 'map' || tab == 'streetmap' || tab == 'globe' || tab == 'table') {
-			if (tab == 'map') world.activateView(world.view.MAP);
-			else if (tab == 'streetmap') world.activateView(world.view.STREETMAP);
-			else if (tab == 'globe') world.activateView(world.view.GLOBE);
-			else if (tab == 'table') world.activateView(world.view.TABLE);
+			world.activateView(tab);
 
 			// if there is no attack data show an info alert
 			if (!world.hasCurrentlyIncidents())
@@ -136,7 +133,7 @@ function updateMenu(tab){
 		}
 		// "Statistics" entry chosen via hash, show statistics
 		else if (tab == 'stats') {
-			world.activateView(world.view.NULL);
+			world.deactivateView();
 			// remove alert
 			$("#tableWaitingAlert").remove();
 			if (help)

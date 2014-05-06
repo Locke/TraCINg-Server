@@ -22,7 +22,7 @@
  * @param map				the name of the jvectormap map
  * @param backgroundColor	the background color of the map
  */
-var map = function(controller, container, map, backgroundColor) {
+var MapView = function(container, map, backgroundColor) {
 	var self = this;
 
 	this.viewOptions = {
@@ -41,20 +41,20 @@ var map = function(controller, container, map, backgroundColor) {
 
 	this.controllerCallbacks = {
 		zoom: function(dir) {
-			if (dir == controller.args.IN)
+			if (dir == Controller.args.IN)
 				self.zoom(1.6);
-			if (dir == controller.args.OUT)
+			if (dir == Controller.args.OUT)
 				self.zoom(1/1.6);
 		},
 		move: function(dir) {
 			var speed = 120;
-			if (dir == controller.args.LEFT)
+			if (dir == Controller.args.LEFT)
 				self.move(speed,0);
-			if (dir == controller.args.RIGHT)
+			if (dir == Controller.args.RIGHT)
 				self.move(-speed, 0);
-			if (dir == controller.args.UP)
+			if (dir == Controller.args.UP)
 				self.move(0, speed);
-			if (dir == controller.args.DOWN)
+			if (dir == Controller.args.DOWN)
 				self.move(0, -speed);
 		},
 		toggle: undefined,
@@ -226,4 +226,4 @@ var map = function(controller, container, map, backgroundColor) {
 	this.resize = function() {
 		container.resize();
 	}
-}
+};

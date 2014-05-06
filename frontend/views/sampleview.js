@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-var sampleview = function(controller, container) {
+var SampleView = function(container) {
 	console.log("sampleview", arguments);
 
 	var self = this;
@@ -104,4 +104,4 @@ var sampleview = function(controller, container) {
 	this.resize = function() {
 		console.log("sampleview.resize", arguments);
 	}
-}
+};

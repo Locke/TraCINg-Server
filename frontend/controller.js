@@ -20,7 +20,7 @@ var Controller = function() {
 	
 	// attributes and constants
 	var modifier;
-	var args;
+	var args = Controller.args;
 	var zoom;
 	var move;
 	var toggle;
@@ -34,19 +34,9 @@ var Controller = function() {
 		modifier = {};
 		// init enabled
 		enabled = true;
-		// set possible arguments used by callbacks
-		args = {
-			IN: 0,
-			OUT: 1,
-			UP: 2,
-			DOWN: 3,
-			LEFT: 4,
-			RIGHT: 5
-		};
 		// initalize keyboard events
 		document.addEventListener('keydown', onDocumentKeyDown, false);
 		document.addEventListener('keyup', onDocumentKeyUp, false);
-		obj.args = args;
 	}
 	
 	/**
@@ -172,4 +162,14 @@ var Controller = function() {
 	
 	// init control
 	init(this);
-}
+};
+
+// set possible arguments used by callbacks
+Controller.args = {
+	IN: 0,
+	OUT: 1,
+	UP: 2,
+	DOWN: 3,
+	LEFT: 4,
+	RIGHT: 5
+};

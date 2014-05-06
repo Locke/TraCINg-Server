@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-var TableView = function(controller, container) {
+var TableView = function(container) {
 	console.log("tableview", arguments);
 
 	var self = this;
@@ -162,4 +162,4 @@ var TableView = function(controller, container) {
 		var attackTableEntry = [incident.sensortype, incident.sensorname, '<span title="' + typeDescr + '">' + type + '</span>', dateFormat, incident.src.country, incident.src.city, incident.src.port, incident.dst.country, incident.dst.city, incident.dst.port, authorized, md5, log];
 		return attackTableEntry;
 	}
-}
+};
