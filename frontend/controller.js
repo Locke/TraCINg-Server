@@ -153,11 +153,17 @@ var Controller = function() {
 	}
 	
 	/**
-	 * Toggle whether the key control is enabled or not
+	 * enable the control
 	 */
-	this.toggleEnabled = function() {
-		enabled = !enabled;
-		return enabled;
+	this.enable = function() {
+		enabled = true;
+	}
+
+	/**
+	 * disable the control
+	 */
+	this.disable = function() {
+		enabled = false;
 	}
 	
 	// init control

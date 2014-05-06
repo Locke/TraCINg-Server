@@ -255,7 +255,7 @@ $(function () {
 		}
 	});
 	// Disable key control of the maps/globe if modal is active
-	$('#aboutView').on('show', function(e) {world.toggleEnabled();});
-	$('#aboutView').on('hide', function(e) {world.toggleEnabled();});
+	$('#aboutView').on('show', function(e) {world.disableController();});
+	$('#aboutView').on('hide', function(e) {world.enableController();});
 });
 

@@ -37,7 +37,8 @@ var world = new function() {
 	/**
 	 * Toggle whether the key control is enabled or not
 	 */
-	this.toggleEnabled = controller.toggleEnabled;
+	this.enableController = controller.enable;
+	this.disableController = controller.disable;
 
 	/**
 	 * Leave maps
