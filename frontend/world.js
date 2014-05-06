@@ -40,6 +40,21 @@ var world = new function() {
 	this.enableController = controller.enable;
 	this.disableController = controller.disable;
 
+	function addControllerHints(container, callbacks) {
+		if (callbacks.toggle != undefined) {
+			container.append($('<div class="legend-toggle" rel="tooltip" title="Toggle heatmap (keyboard control)">t</div>').tooltip());
+		}
+
+		if (callbacks.zoom != undefined) {
+			container.append($('<div class="legend-up icon-arrow-up" rel="tooltip" title="Zoom in (keyboard control)"></div>').tooltip());
+			container.append($('<div class="legend-down icon-arrow-down" rel="tooltip" title="Zoom out (keyboard control)"></div>').tooltip());
+		}
+
+		if (callbacks.move != undefined) {
+			container.append($('<div class="legend-wasd" rel="tooltip" title="Move (keyboard controls)">w/a/s/d</div>').tooltip());
+		}
+	}
+
 	/**
 	 * Leave maps
 	 */
@@ -60,8 +75,12 @@ var world = new function() {
 	}
 
 	this.initializeView = function(v) {
-		if (!views[v].initialized)
-			views[v].initialize();
+		if (views[v].initialized)
+			return;
+
+		addControllerHints(views[v].container, views[v].controllerCallbacks);
+
+		views[v].initialize();
 	}
 
 	this.activateView = function(v) {

@@ -108,6 +108,17 @@ var MapView = function(container, map, backgroundColor) {
 			}
 		});
 
+
+		// zoom tooltips for jVectorMap
+		$("div.jvectormap-zoomin").each(function() {
+			$(this).attr("title", "Zoom in").tooltip();
+		});
+
+		$("div.jvectormap-zoomout").each(function() {
+			$(this).attr("title", "Zoom out").tooltip();
+		});
+
+
 		this.initialized = true;
 	}
 	

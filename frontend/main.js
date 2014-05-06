@@ -25,8 +25,6 @@ var socket = io.connect("/");	// connect to the current server/port
  
  // do on startup
 $(function () {
-	// activate tooltips
-	$("[rel=tooltip]").tooltip();
 	// no advanced marker info on default
 	advInfo = false;
 	// prevent having lots of blue space above and below the map if the window is narrow
@@ -46,16 +44,6 @@ $(function () {
 	// set datepicker to current date on pageload
 	$("#inputDateDay").datepicker("setDate", "null");
 	$("#inputDateNoDay").datepicker("setDate", "null");
-	
-	// zoom tooltips for jVectorMap
-	$("div.jvectormap-zoomin").each(function() {
-		$(this).rel += "tooltip";
-		$(this).attr("title", "Zoom in");
-	});
-	$("div.jvectormap-zoomout").each(function() {
-		$(this).rel += "tooltip";
-		$(this).attr("title", "Zoom out");
-	});
 });
 
 // resolve hash (link)
