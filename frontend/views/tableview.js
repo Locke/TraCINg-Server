@@ -47,7 +47,10 @@ var TableView = function(container) {
 	this.initialize = function() {
 		console.log("tableview.initialize", arguments);
 
-		attackTable = $("#attackTable").dataTable({
+		var table = genAttackTable();
+		this.container.append(table);
+
+		attackTable = table.dataTable({
 			"aaSorting": [[ 3, "desc" ]], // order by date, new items first
 			"sScrollY": "100%",
 			"fnDrawCallback": function() {
@@ -56,6 +59,17 @@ var TableView = function(container) {
 		});
 
 		this.initialized = true;
+	}
+
+	function genAttackTable() {
+		var table = $('<table class="table table-striped"><thead><tr></tr></thead></table>');
+		var tr = $('tr', table);
+		var cols = ["Sensor Type", "Sensor Name", "Attack Type", "Date", "Source Country", "Source City", "Source Port", "Destination Country", "Destination City", "Destination Port", "Authorized Sensor", "md5 Sum", "Log"];
+		for (var i in cols) {
+			tr.append($('<th>' + cols[i] + '</th>'));
+		}
+
+		return table;
 	}
 
 	/**
@@ -78,7 +92,7 @@ var TableView = function(container) {
 		for (var i in arr) {
 			rows.push(generateTableEntry(arr[i]));
 		}
-		$("#attackTable").dataTable().fnAddData(rows);
+		attackTable.fnAddData(rows);
 
 		world.makePopovers();
 
@@ -91,19 +105,19 @@ var TableView = function(container) {
 	this.hasIncidents = function() {
 		console.log("tableview.hasIncidents", arguments);
 
-		return ($("#table .dataTables_empty").length == 0);
+		return ($(".dataTables_empty", this.container).length == 0);
 	}
 
 
 	function updateAttackTableHeight() {
 		var height = $(window).height();
 
-		height -= $("#table .dataTables_scrollBody").offset().top;
-		height -= $("#table .dataTables_scroll + div").height();
+		height -= $(".dataTables_scrollBody", this.container).offset().top;
+		height -= $(".dataTables_scroll + div", this.container).height();
 
 		console.log("attackTableHeight: " + height);
 
-		$("#table .dataTables_scrollBody").css({"max-height": height});
+		$(".dataTables_scrollBody", this.container).css({"max-height": height});
 	}
 
 	this.resize = function() {
