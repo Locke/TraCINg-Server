@@ -114,12 +114,6 @@
 	position: fixed;
 }
 
-/* override globe.css height field */
-.globe-background {
-	height: 80%;
-	width: 80%;
-}
-
 /* maps */
 .maps {
 	position: absolute;
