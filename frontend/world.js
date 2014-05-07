@@ -445,12 +445,12 @@ var world = new function() {
 
 
 	/**
-	 * resize table
+	 * resize current view
 	 */
-	function resizeTable() {
-		if (views['table']) views['table'].resize();
+	function resizeView() {
+		if (views[currentView]) views[currentView].resize();
 	}
-	this.resizeTable = resizeTable;
+	this.resizeView = resizeView;
 }
 
 function showLog(id){
@@ -472,19 +472,12 @@ $(function(){
 	world.initializeView('table');
 
 	setTimeout(function() {
-		world.resizeTable();
+		world.resizeView();
 	}, 10);
-
-	// prevent having lots of blue space above and below the map if the window is narrow
-	$("#map").css("height", function() {return Math.min($("#map").width()/2+50, $(window).height()*0.8);});
 
 	//world.registerView('sample', new SampleView($('#table')));
 });
 
 $(window).resize($.throttle(250,function() {
-	world.resizeTable();
-
-	// prevent having lots of blue space above and below the map if the window is narrow
-	// $("#map").width()/2+50: /2 because the map is 2:1 format, +50 because the zoom buttons shall not overlap the map
-	$("#map").css("height", function() {return Math.min($("#map").width()/2+50, $(window).height()*0.8);});
+	world.resizeView();
 }));

@@ -127,9 +127,7 @@ function updateMenu(tab){
 
 			$("#resetMap").removeClass("disabled");
 
-			if (tab == 'table') {
-				world.resizeTable();
-			}
+			world.resizeView();
 		}
 		// "Statistics" entry chosen via hash, show statistics
 		else if (tab == 'stats') {
@@ -184,7 +182,7 @@ $(function () {
 				world.finishLoading(false);
 				$("#liveView").addClass("active");
 				$("#dbView").removeClass("active");
-				world.resizeTable();
+				world.resizeView();
 			}
 		});
 		// "Database View" entry chosen in toggle button menu -> switch to database view, show side/database window
@@ -199,7 +197,7 @@ $(function () {
 					showHelpPopovers();
 				$("#dbView").addClass("active");
 				$("#liveView").removeClass("active");
-				world.resizeTable();
+				world.resizeView();
 			}
 		});
 		// "Advanced Marker Information" entry chosen in menu -> show more information on hover over markers

@@ -118,7 +118,6 @@ var MapView = function(container, map, backgroundColor) {
 			$(this).attr("title", "Zoom out").tooltip();
 		});
 
-
 		this.initialized = true;
 	}
 	
@@ -235,6 +234,10 @@ var MapView = function(container, map, backgroundColor) {
 	}
 
 	this.resize = function() {
+		// prevent having lots of blue space above and below the map if the window is narrow
+		// $("#map").width()/2+50: /2 because the map is 2:1 format, +50 because the zoom buttons shall not overlap the map
+		container.css("height", function() {return Math.min(container.width()/2+50, $(window).height()*0.8);});
+
 		container.resize();
 	}
 };
