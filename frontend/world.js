@@ -474,9 +474,16 @@ $(function(){
 		world.resizeTable();
 	}, 10);
 
+	// prevent having lots of blue space above and below the map if the window is narrow
+	$("#map").css("height", function() {return Math.min($("#map").width()/2+50, $(window).height()*0.8);});
+
 	//world.registerView('sample', new SampleView($('#table')));
 });
 
 $(window).resize($.throttle(250,function() {
 	world.resizeTable();
+
+	// prevent having lots of blue space above and below the map if the window is narrow
+	// $("#map").width()/2+50: /2 because the map is 2:1 format, +50 because the zoom buttons shall not overlap the map
+	$("#map").css("height", function() {return Math.min($("#map").width()/2+50, $(window).height()*0.8);});
 }));

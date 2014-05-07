@@ -27,8 +27,6 @@ var socket = io.connect("/");	// connect to the current server/port
 $(function () {
 	// no advanced marker info on default
 	advInfo = false;
-	// prevent having lots of blue space above and below the map if the window is narrow
-	$("#map").css("height", function() {return Math.min($("#map").width()/2+50, $(window).height()*0.8);});
 	// hide left window
 	$(leftWin).hide();
 	// center the map
@@ -93,9 +91,6 @@ function toggleCenterDivs() {
 // do on resize
 $(window).resize(function() {
 	toggleCenterDivs();
-	// prevent having lots of blue space above and below the map if the window is narrow
-	// $("#map").width()/2+50: /2 because the map is 2:1 format, +50 because the zoom buttons shall not overlap the map
-	$("#map").css("height", function() {return Math.min($("#map").width()/2+50, $(window).height()*0.8);});
 });
 
 
