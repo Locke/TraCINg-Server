@@ -326,7 +326,8 @@ var world = new function() {
 	this.reset = function() {
 		// reset views
 		for (var key in views) {
-			views[key].reset();
+			if (views[key].initialized)
+				views[key].reset();
 		}
 
 		attackNumberHash = {};
