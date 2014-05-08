@@ -108,15 +108,16 @@ var StreetmapView = function() {
 			var stmapHoverTimer;
 
 			circle.on("mouseover", function(e) {
+				var marker = this;
+
 				// show standard or advanced label information depending on which is requested
 				var splittedLabel = label.split(";");
 				if (advInfo)
-					this._popup.setContent(label);
+					marker._popup.setContent(label);
 				else
-					this._popup.setContent(splittedLabel[0]);
-				this.openPopup();
+					marker._popup.setContent(splittedLabel[0]);
+				marker.openPopup();
 
-				var marker = this;
 
 				// define mouseleave events
 				popup._container.addEventListener("mouseleave", function(e) {stmapHoverTimer = setTimeout(function() {marker.closePopup()}, holdTime)});
