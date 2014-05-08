@@ -55,6 +55,7 @@ var SampleView = function() {
 	 */
 	this.reset = function() {
 		console.log("sampleview.reset", arguments);
+		this.container.empty();
 	}
 	
 	/**
@@ -78,7 +79,9 @@ var SampleView = function() {
 	 */
 	this.addIncidents = function(arr, color) {
 		console.log("sampleview.addIncidents", arguments);
-		return [0];
+		var text = $('<span>added '+arr.length+' incident(s)</span><br/>');
+		this.container.append(text);
+		//return [1,2,3];
 	}
 	
 	/**
