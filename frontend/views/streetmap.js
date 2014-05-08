@@ -20,6 +20,7 @@ var StreetmapView = function() {
 	var self = this;
 
 	this.viewOptions = {
+		title: "Map View",		// text shown in navbar
 		hasMarker: true,		// the view does display markers
 		animatesMarker: false,		// map does not animate them -> world should do it
 		showAdvMarkerInfo: true,	// enable advMarkerInfo button

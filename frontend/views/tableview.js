@@ -23,6 +23,7 @@ var TableView = function() {
 	var attackTable;
 
 	this.viewOptions = {
+		title: "Table View",		// text shown in navbar
 		hasMarker: false,		// the view does not display any markers..
 		animatesMarker: false,		// .. and therefore does not animate them
 		showAdvMarkerInfo: false,	// disable advMarkerInfo button

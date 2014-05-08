@@ -21,6 +21,7 @@ var GlobeView = function() {
 	var self = this;
 
 	this.viewOptions = {
+		title: "3D View",		// text shown in navbar
 		hasMarker: true,		// the view does display markers
 		animatesMarker: true,		// globe animates them -> world shouldn't do it
 		showAdvMarkerInfo: true,	// enable advMarkerInfo button

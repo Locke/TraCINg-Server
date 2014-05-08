@@ -72,6 +72,9 @@ var world = new function() {
 			return false;
 
 		views[name] = v;
+
+		addNavbarItem(name);
+
 		return true;
 	}
 
@@ -90,6 +93,13 @@ var world = new function() {
 		var c = $('<div id="' + v + '" class="world-view" />');
 		$('#view').append(c);
 		return c;
+	}
+
+	function addNavbarItem(v) {
+		var x = $('<li onhelpactive="help-outline"><a id="tab_view-'+v+'" href="#/view/'+v+'">'+views[v].viewOptions.title+'</a></li>');
+		var divider = $("#menutabs > li.divider-vertical");
+		x.insertBefore(divider[1]);
+		// TODO: move help popovers from help.js here
 	}
 
 	this.activateView = function(v) {

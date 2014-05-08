@@ -67,9 +67,13 @@ function goToLocationHash(){
 	// call menu.js
 	updateMenu(tab, args);
 	
-	// TODO: currently broken for views
 	// toggle active inmenu bar
-	var nav_li = $("#tab_"+tab).parent();
+	var nav_li;
+	if (tab == "view")
+		nav_li = $("#tab_"+tab+"-"+args[2]).parent();
+	else
+		nav_li = $("#tab_"+tab).parent();
+
 	//console.log("nav_li", nav_li);
 	nav_li && nav_li.addClass('active');
 }

@@ -25,6 +25,7 @@ var MapView = function(map, backgroundColor) {
 	var self = this;
 
 	this.viewOptions = {
+		title: "Country View",		// text shown in navbar
 		hasMarker: true,		// the view does display markers
 		animatesMarker: false,		// map does not animate them -> world should do it
 		showAdvMarkerInfo: true,	// enable advMarkerInfo button
