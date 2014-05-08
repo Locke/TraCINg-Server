@@ -96,10 +96,9 @@ var world = new function() {
 	}
 
 	function addNavbarItem(v) {
-		var x = $('<li onhelpactive="help-outline"><a id="tab_view-'+v+'" href="#/view/'+v+'">'+views[v].viewOptions.title+'</a></li>');
+		var x = $('<li onhelpactive="help-outline"><a id="tab_view-'+v+'" href="#/view/'+v+'">'+views[v].viewOptions.navbar.title+'</a></li>');
 		var divider = $("#menutabs > li.divider-vertical");
 		x.insertBefore(divider[1]);
-		// TODO: move help popovers from help.js here
 	}
 
 	this.activateView = function(v) {
@@ -461,7 +460,6 @@ var world = new function() {
 			$("#" + key + ".markerAnimation").remove
 		);
 	}
-	
 
 
 	/**
@@ -471,6 +469,14 @@ var world = new function() {
 		if (views[currentView] && views[currentView].initialized) views[currentView].resize();
 	}
 	this.resizeView = resizeView;
+
+	this.showHelpPopovers = function() {
+		for (var i in views) {
+			$('#tab_view-'+i).parent().popover({title: views[i].viewOptions.navbar.title, content: views[i].viewOptions.navbar.description, trigger: trigger, placement: 'bottom'});
+			// a view may want to display additional help popovers
+			views[i].showHelpPopovers();
+		}
+	}
 }
 
 function showLog(id){

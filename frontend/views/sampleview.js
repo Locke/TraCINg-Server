@@ -22,10 +22,13 @@ var SampleView = function() {
 	var self = this;
 
 	this.viewOptions = {
-		title: "Sample View",		// text shown in navbar
 		hasMarker: false,		// the view does not display any markers
 		animatesMarker: false,		// does not animate them -> world should do it
 		showAdvMarkerInfo: false,	// disable advMarkerInfo button
+		navbar: {
+			title: "Sample View",
+			description: "Click here for the Sample View.",
+		}
 	};
 
 	this.controllerCallbacks = {
@@ -104,5 +107,9 @@ var SampleView = function() {
 
 	this.resize = function() {
 		console.log("sampleview.resize", arguments);
+	}
+
+	this.showHelpPopovers = function() {
+		console.log("sampleview.showHelpPopovers", arguments);
 	}
 };

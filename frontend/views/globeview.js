@@ -21,10 +21,13 @@ var GlobeView = function() {
 	var self = this;
 
 	this.viewOptions = {
-		title: "3D View",		// text shown in navbar
 		hasMarker: true,		// the view does display markers
 		animatesMarker: true,		// globe animates them -> world shouldn't do it
 		showAdvMarkerInfo: true,	// enable advMarkerInfo button
+		navbar: {
+			title: "3D View",
+			description: "Click here for a 3D view of the attacks. This globe shows the sources of attacks detected by our sensors. For more detailed information, hover over countries and markers. A countries color represents the number of attacks originating from there; the darker the red, the more attacks originate from this country. Toggle a heatmap by pressing \"t\" on your keyboard. You can also zoom in and out using the mouse wheel and move the globe by moving the mouse while holding down the left mouse button. Keyboard controls are described in the bottom left corner.",
+		}
 	};
 
 	// create globeObject
@@ -166,5 +169,9 @@ var GlobeView = function() {
 	this.rotate = function(horizAngle, vertAngle) {
 		console.log("globeview.rotate", arguments);
 		globe.rotate(horizAngle, vertAngle);
+	}
+
+	this.showHelpPopovers = function() {
+		// nothing to do
 	}
 };

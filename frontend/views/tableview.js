@@ -23,10 +23,13 @@ var TableView = function() {
 	var attackTable;
 
 	this.viewOptions = {
-		title: "Table View",		// text shown in navbar
 		hasMarker: false,		// the view does not display any markers..
 		animatesMarker: false,		// .. and therefore does not animate them
 		showAdvMarkerInfo: false,	// disable advMarkerInfo button
+		navbar: {
+			title: "Table View",
+			description: "Click here for a table representation of the attack data received from the sensors. This table always shows exactly the attacks which are currently represented on the maps/globe (no less, no more). This behavior is independent from live or database view. Hover over the entries in \"Attack Types\" to learn more about them.",
+		}
 	};
 
 	this.controllerCallbacks = {
@@ -176,5 +179,9 @@ var TableView = function() {
 		//make entry
 		var attackTableEntry = [incident.sensortype, incident.sensorname, '<span title="' + typeDescr + '">' + type + '</span>', dateFormat, incident.src.country, incident.src.city, incident.src.port, incident.dst.country, incident.dst.city, incident.dst.port, authorized, md5, log];
 		return attackTableEntry;
+	}
+
+	this.showHelpPopovers = function() {
+		// nothing to do
 	}
 };

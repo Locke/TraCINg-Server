@@ -25,10 +25,13 @@ var MapView = function(map, backgroundColor) {
 	var self = this;
 
 	this.viewOptions = {
-		title: "Country View",		// text shown in navbar
 		hasMarker: true,		// the view does display markers
 		animatesMarker: false,		// map does not animate them -> world should do it
 		showAdvMarkerInfo: true,	// enable advMarkerInfo button
+		navbar: {
+			title: "Country View",
+			description: "Click here for a 2D view of the attacks. This map shows the sources of attacks detected by our sensors. For more detailed information, hover over countries and markers. A countries color represents the number of attacks originating from there; the darker the red, the more attacks originate from this country. You can also zoom in and out using the mouse wheel and move around the map by moving the mouse while holding down the left mouse button (if zoomed in). Keyboard controls are described in the bottom left corner.",
+		}
 	};
 
 	var mapObject;
@@ -239,5 +242,9 @@ var MapView = function(map, backgroundColor) {
 		self.container.css("height", function() {return Math.min(self.container.width()/2+50, $(window).height()*0.8);});
 
 		self.container.resize();
+	}
+
+	this.showHelpPopovers = function(){
+		// nothing to do
 	}
 };

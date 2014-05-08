@@ -20,10 +20,13 @@ var StreetmapView = function() {
 	var self = this;
 
 	this.viewOptions = {
-		title: "Map View",		// text shown in navbar
 		hasMarker: true,		// the view does display markers
 		animatesMarker: false,		// map does not animate them -> world should do it
 		showAdvMarkerInfo: true,	// enable advMarkerInfo button
+		navbar: {
+			title: "Map View",
+			description: "Click here for a streetmap view of the attacks (also in 2D). This map shows the sources of attacks detected by our sensors. For more detailed information, click the markers. Coloring and country hover is not supported here. You can also zoom in and out using the mouse wheel and move around the map by moving the mouse while holding down the left mouse button. Keyboard controls are described in the bottom left corner.",
+		}
 	};
 
 	var stmap;
@@ -196,5 +199,9 @@ var StreetmapView = function() {
 
 	this.resize = function() {
 		stmap.invalidateSize(false);
+	}
+
+	this.showHelpPopovers = function() {
+		// nothing to do
 	}
 };
