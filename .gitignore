@@ -7,3 +7,4 @@ ssl
 *.swp
 *.swo
 *.*~
+*.orig
