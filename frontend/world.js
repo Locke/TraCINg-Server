@@ -102,7 +102,13 @@ var world = new function() {
 	}
 
 	this.activateView = function(v) {
+		if (!views[v]) {
+			console.warn("Unknown view: " + v);
+			return;
+		}
+
 		if (views[currentView] && views[currentView].initialized) views[currentView].container.hide();
+
 		currentView = v;
 		this.initializeView(currentView);
 		controller.registerCallbacks(views[currentView].controllerCallbacks);
