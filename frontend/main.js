@@ -46,11 +46,6 @@ $(function () {
 
 // resolve hash (link)
 function goToLocationHash(){
-	if(!window.location.hash){
-		window.location.hash = "/map";
-		return;
-	}
-
 	// hide all containers
 	$("#mainContent > div").hide();
 	$("#errorOutput").show();
@@ -58,8 +53,9 @@ function goToLocationHash(){
 	// remove active from all menu entries
 	$("#menutabs > li").removeClass('active');
 	
-	// determine which tab should be shown, default is "map"
-	var tab = window.location.hash && window.location.hash.split("/")[1] || "map";
+	// determine which tab should be shown, default is the "map" view
+	var args = (window.location.hash && window.location.hash || "#/view/map").split("/");
+	var tab = args[1];
 	//console.log("tab: " + tab);
 
 	// show container
@@ -69,9 +65,10 @@ function goToLocationHash(){
 	//console.log("container_post: ", container);
 	
 	// call menu.js
-	updateMenu(tab);
+	updateMenu(tab, args);
 	
-	// toggle active in menu bar
+	// TODO: currently broken for views
+	// toggle active inmenu bar
 	var nav_li = $("#tab_"+tab).parent();
 	//console.log("nav_li", nav_li);
 	nav_li && nav_li.addClass('active');

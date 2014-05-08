@@ -59,6 +59,7 @@ var world = new function() {
 	 * Leave maps
 	 */
 	function deactivateView() {
+		if (views[currentView]) views[currentView].container.hide();
 		currentView = null;
 		controller.unregisterCallbacks();
 	}
@@ -86,18 +87,18 @@ var world = new function() {
 	}
 
 	function createContainer(v) {
-		var c = $('<div id="' + v + '" class="center world-view" LeftWinRemove="center"></div>');
-		$('#mainContent').append(c);
-		c.show();
+		var c = $('<div id="' + v + '" class="world-view" />');
+		$('#view').append(c);
 		return c;
 	}
 
 	this.activateView = function(v) {
-		this.initializeView(v);
+		if (views[currentView] && views[currentView].initialized) views[currentView].container.hide();
 		currentView = v;
-		controller.registerCallbacks(views[v].controllerCallbacks);
+		this.initializeView(currentView);
+		controller.registerCallbacks(views[currentView].controllerCallbacks);
 
-		views[v].resize();
+		views[currentView].container.show();
 	}
 
 	/**

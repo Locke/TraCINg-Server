@@ -101,10 +101,10 @@ function updateHelpElements() {
  * menu functionality (navbar and toggle buttons)
  * includes: make navbar buttons toggleable (except help and about as they do not (yet) change the side content)
  */
-function updateMenu(tab){
+function updateMenu(tab, args){
 		// a view entry chosen via hash, activate it
-		if (tab == 'map' || tab == 'streetmap' || tab == 'globe' || tab == 'table') {
-			world.activateView(tab);
+		if (tab == 'view') {
+			world.activateView(args[2]);
 
 			// if there is no attack data show an info alert
 			if (!world.hasCurrentlyIncidents())
