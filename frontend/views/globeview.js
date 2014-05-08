@@ -16,17 +16,15 @@
  * limitations under the License.
  */
 
-var GlobeView = function(container) {
+var GlobeView = function() {
 	console.log("globeview", arguments);
 	var self = this;
-	var container = container;
 
 	this.viewOptions = {
 		hasMarker: true,		// the view does display markers
 		animatesMarker: true,		// globe animates them -> world shouldn't do it
 		showAdvMarkerInfo: true,	// enable advMarkerInfo button
 	};
-	this.container = container;
 
 	// create globeObject
 	var globe;
@@ -46,7 +44,8 @@ var GlobeView = function(container) {
 	};
 
 	this.initialized = false;
-	this.initialize = function() {
+	this.initialize = function(container) {
+		this.container = container;
 		globe = new GLOBE.main(container[0], "extern/globe/images/", {
 			'modifyMarkerLabel': modifyMarkerLabel,
 			'setCountryLabel': setCountryLabel

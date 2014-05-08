@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-var TableView = function(container) {
+var TableView = function() {
 	console.log("tableview", arguments);
 
 	var self = this;
@@ -27,7 +27,6 @@ var TableView = function(container) {
 		animatesMarker: false,		// .. and therefore does not animate them
 		showAdvMarkerInfo: false,	// disable advMarkerInfo button
 	};
-	this.container = container;
 
 	this.controllerCallbacks = {
 		/*
@@ -44,7 +43,8 @@ var TableView = function(container) {
 	};
 
 	this.initialized = false;
-	this.initialize = function() {
+	this.initialize = function(container) {
+		this.container = container;
 		console.log("tableview.initialize", arguments);
 
 		var table = genAttackTable();

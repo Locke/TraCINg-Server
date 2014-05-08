@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-var SampleView = function(container) {
+var SampleView = function() {
 	console.log("sampleview", arguments);
 
 	var self = this;
@@ -26,7 +26,6 @@ var SampleView = function(container) {
 		animatesMarker: false,		// does not animate them -> world should do it
 		showAdvMarkerInfo: false,	// disable advMarkerInfo button
 	};
-	this.container = container;
 
 	this.controllerCallbacks = {
 		zoom: function(dir) {
@@ -41,7 +40,8 @@ var SampleView = function(container) {
 	};
 
 	this.initialized = false;
-	this.initialize = function() {
+	this.initialize = function(container) {
+		this.container = container;
 		console.log("sampleview.initialize", arguments);
 		this.initialized = true;
 	}

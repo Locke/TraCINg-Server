@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-var StreetmapView = function(container) {
+var StreetmapView = function() {
 	var self = this;
 
 	this.viewOptions = {
@@ -24,7 +24,6 @@ var StreetmapView = function(container) {
 		animatesMarker: false,		// map does not animate them -> world should do it
 		showAdvMarkerInfo: true,	// enable advMarkerInfo button
 	};
-	this.container = container;
 
 	var stmap;
 	var maxKey = 500;					// maximum amount of markers
@@ -56,7 +55,8 @@ var StreetmapView = function(container) {
 	};
 
 	this.initialized = false;
-	this.initialize = function() {
+	this.initialize = function(container) {
+		this.container = container;
 		stmap = new L.Map(container[0]);	// create a map
 		// set standard (start) view (first argument: lat/lng; second argument: zoom (the smaller the farther away))
 		stmap.setView([35, 0], 3, {animate: false});

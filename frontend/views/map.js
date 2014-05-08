@@ -18,11 +18,10 @@
 
 /**
  * Creates a 2d map based on jvectormaps
- * @param container			the html element where the map will be displayed
  * @param map				the name of the jvectormap map
  * @param backgroundColor	the background color of the map
  */
-var MapView = function(container, map, backgroundColor) {
+var MapView = function(map, backgroundColor) {
 	var self = this;
 
 	this.viewOptions = {
@@ -30,7 +29,6 @@ var MapView = function(container, map, backgroundColor) {
 		animatesMarker: false,		// map does not animate them -> world should do it
 		showAdvMarkerInfo: true,	// enable advMarkerInfo button
 	};
-	this.container = container;
 
 	var mapObject;
 	var uniqueKey = 0;						// unique key for marker id
@@ -61,7 +59,8 @@ var MapView = function(container, map, backgroundColor) {
 	};
 
 	this.initialized = false;
-	this.initialize = function() {
+	this.initialize = function(container) {
+		this.container = container;
 		mapObject = new jvm.WorldMap( {	// jvectormap
 			container: container,
 			map: map,
@@ -236,8 +235,8 @@ var MapView = function(container, map, backgroundColor) {
 	this.resize = function() {
 		// prevent having lots of blue space above and below the map if the window is narrow
 		// $("#map").width()/2+50: /2 because the map is 2:1 format, +50 because the zoom buttons shall not overlap the map
-		container.css("height", function() {return Math.min(container.width()/2+50, $(window).height()*0.8);});
+		self.container.css("height", function() {return Math.min(self.container.width()/2+50, $(window).height()*0.8);});
 
-		container.resize();
+		self.container.resize();
 	}
 };

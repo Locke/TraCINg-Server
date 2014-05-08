@@ -78,9 +78,18 @@ var world = new function() {
 		if (views[v].initialized)
 			return;
 
-		addControllerHints(views[v].container, views[v].controllerCallbacks);
+		var container = createContainer(v);
 
-		views[v].initialize();
+		addControllerHints(container, views[v].controllerCallbacks);
+
+		views[v].initialize(container);
+	}
+
+	function createContainer(v) {
+		var c = $('<div id="' + v + '" class="center world-view" LeftWinRemove="center"></div>');
+		$('#mainContent').append(c);
+		c.show();
+		return c;
 	}
 
 	this.activateView = function(v) {
@@ -448,7 +457,7 @@ var world = new function() {
 	 * resize current view
 	 */
 	function resizeView() {
-		if (views[currentView]) views[currentView].resize();
+		if (views[currentView] && views[currentView].initialized) views[currentView].resize();
 	}
 	this.resizeView = resizeView;
 }
@@ -465,10 +474,10 @@ function showLog(id){
 
 // TODO: may use a config file to specify which views should be used
 $(function(){
-	world.registerView('map', new MapView($('#map'), 'world_mill_en', 'navy'));
-	world.registerView('streetmap', new StreetmapView($('#streetmap')));
-	world.registerView('globe', new GlobeView($('#globe')));
-	world.registerView('table', new TableView($('#table')));
+	world.registerView('map', new MapView('world_mill_en', 'navy'));
+	world.registerView('streetmap', new StreetmapView());
+	world.registerView('globe', new GlobeView());
+	world.registerView('table', new TableView());
 	world.initializeView('table');
 
 	setTimeout(function() {
