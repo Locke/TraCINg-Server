@@ -92,6 +92,11 @@ var StreetmapView = function() {
 
 		for (var i in arr) {
 			var data = arr[i];
+
+			// skip incidents without a location
+			if (!data.src || !data.src.ll || (!data.src.ll[0] && !data.src.ll[1]))
+				continue;
+
 			var cc = data.src.cc;
 			var ll = data.src.ll;
 			var label = data.src.label;
@@ -171,7 +176,10 @@ var StreetmapView = function() {
 	 * get marker position (lat/lng to point) for css animation
 	 */
 	this.getPosition = function(latitude, longitude) {
-		return stmap.latLngToContainerPoint(new L.LatLng(latitude, longitude));
+		if (!latitude && !longitude)
+			return undefined;
+		else
+			return stmap.latLngToContainerPoint(new L.LatLng(latitude, longitude));
 	}
 	
 	/*

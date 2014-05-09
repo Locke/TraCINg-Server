@@ -117,6 +117,10 @@ var GlobeView = function() {
 		for (var i in arr) {
 			var data = arr[i];
 
+			// skip incidents without a location
+			if (!data.src || !data.src.ll || (!data.src.ll[0] && !data.src.ll[1]))
+				continue;
+
 			var cc = data.src.cc;
 			var ll = data.src.ll;
 			var label = data.src.label;
@@ -142,7 +146,10 @@ var GlobeView = function() {
 	 */
 	this.getPosition = function(latitude, longitude) {
 		console.log("globeview.getPosition", arguments);
-		return globe.getPosition(latitute, longitude);
+		if (!latitude && !longitude)
+			return undefined;
+		else
+			return globe.getPosition(latitute, longitude);
 	}
 	
 	

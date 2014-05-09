@@ -164,6 +164,12 @@ var MapView = function(map, backgroundColor) {
 		for (var i in arr) {
 			var data = arr[i];
 
+			// skip incidents without a location
+			if (!data.src || !data.src.ll || (!data.src.ll[0] && !data.src.ll[1])) {
+				incidents--;
+				continue;
+			}
+
 			var key = uniqueKey;
 			keys.push(key);
 
@@ -217,7 +223,10 @@ var MapView = function(map, backgroundColor) {
 	 * Get the pixel position of a geographic point
 	 */
 	this.getPosition = function(latitude, longitude) {
-		return mapObject.latLngToPoint(latitude, longitude);
+		if (!latitude && !longitude)
+			return undefined;
+		else
+			return mapObject.latLngToPoint(latitude, longitude);
 	}
 	
 	/**

@@ -251,12 +251,6 @@ var world = new function() {
 	 * Mark incidents on all loaded views
 	 */
 	this.markIncidents = function(data, live, noAnimation) {
-		/*
-		// TODO: broken in merge with dynamicviews
-		if (!data.src || !data.src.ll || (!data.src.ll[0] && !data.src.ll[1]) )
-			return;
-		*/
-
 		// remove alert saying "Waiting for attacks..."
 		$("#tableWaitingAlert").remove();
 	
