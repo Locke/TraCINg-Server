@@ -21,6 +21,7 @@
  * Creates a world object containing a 2d map, 2d streetmap and a 3d globe
  */
 var world = new function() {
+	var self = this;
 
 	var currentView;
 
@@ -485,6 +486,10 @@ var world = new function() {
 			views[i].showHelpPopovers();
 		}
 	}
+
+	$(window).resize($.throttle(250,function() {
+		self.resizeView();
+	}));
 }
 
 function showLog(id){
@@ -511,7 +516,3 @@ $(function(){
 
 	//world.registerView('sample', new SampleView($('#table')));
 });
-
-$(window).resize($.throttle(250,function() {
-	world.resizeView();
-}));
