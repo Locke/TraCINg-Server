@@ -5,6 +5,12 @@ Changelog
 
 * support for private networks
 
+## branch dynamicviews ##
+
+* restructe world.js so that views can be added dynamicly
+** to create a new view make a copy of sampleview
+** to decide which views should be loaded at bottom of world.js
+
 ## v1.0.2 ##
 
 * filtering for 'Unknown' incident types returns now all incidents without a known type (issue #30)

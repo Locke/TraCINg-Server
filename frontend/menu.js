@@ -101,84 +101,42 @@ function updateHelpElements() {
  * menu functionality (navbar and toggle buttons)
  * includes: make navbar buttons toggleable (except help and about as they do not (yet) change the side content)
  */
-function updateMenu(tab){
-		// "2D View" entry chosen via hash, show 2D map
-	    if (tab == 'map') {
-	    	world.showMap();
-	    	// if there is no attack data show an info alert
-			if (!world.jvmHasMarker())
+function updateMenu(tab, args){
+		// a view entry chosen via hash, activate it
+		if (tab == 'view') {
+			world.activateView(args[2]);
+
+			// if there is no attack data show an info alert
+			if (!world.hasCurrentlyIncidents())
 				showInfoNoData();
 			// if there is attack data remove the info alert
 			else
 				$("#tableWaitingAlert").remove();
-	    	// set help if active
-	    	if (help)
-		    	$("#helpEntry").addClass("active");
-			// resize map before showing it to prevent it from showing up tiny
-		    $("#map").resize();
+
+			// set help if active
+			if (help)
+				$("#helpEntry").addClass("active");
 
 			// set left window and toogleLive
 			updateWins("dbWin", !live, true, !live && requestAttackUpdate);
-			$("#advMarkerInfo").removeClass("disabled");
-			$("#resetMap").removeClass("disabled");
-		}
-		// "Street View" entry chosen via hash, show streetmap
-		else if (tab == 'streetmap') {
-			world.showStreetmap();
-			// if there is no attack data show an info alert
-			if (!world.stMapHasMarker())
-				showInfoNoData();
-			// if there is attack data remove the info alert
+
+			if (world.showAdvMarkerInfo())
+				$("#advMarkerInfo").removeClass("disabled");
 			else
-				$("#tableWaitingAlert").remove();
-			if (help)
-				$("#helpEntry").addClass("active");
-			
-			updateWins("dbWin", !live, true, !live && requestAttackUpdate);
-			$("#advMarkerInfo").removeClass("disabled");
+				$("#advMarkerInfo").addClass("disabled");
+
 			$("#resetMap").removeClass("disabled");
-		}
-		// "3D View" entry chosen via hash, show 3D map
-		else if (tab == 'globe') {
-			world.showGlobe();
-			// if there is no attack data show an info alert
-			if (!world.globeHasMarker())
-				showInfoNoData();
-			// if there is attack data remove the info alert
-			else
-				$("#tableWaitingAlert").remove();
-			if (help)
-				$("#helpEntry").addClass("active");
-			
-			updateWins("dbWin", !live, true, !live && requestAttackUpdate);
-			$("#advMarkerInfo").removeClass("disabled");
-			$("#resetMap").removeClass("disabled");
-		}
-		// "Table View" entry chosen via hash, show table
-		else if (tab == 'table') {
-			world.leaveMap();
-			if (help)
-		    	$("#helpEntry").addClass("active");
-		    // if there is no attack data show an info alert
-		    if ($("#table .dataTables_empty").length > 0)
-		    	showInfoNoData();
-			// if there is attack data remove the info alert
-			else
-				$("#tableWaitingAlert").remove();
-			
-			updateWins("dbWin", !live, true, !live && requestAttackUpdate);
-			$("#advMarkerInfo").addClass("disabled");
-			$("#resetMap").removeClass("disabled");
-			world.resize();
+
+			world.resizeView();
 		}
 		// "Statistics" entry chosen via hash, show statistics
 		else if (tab == 'stats') {
-			world.leaveMap();
+			world.deactivateView();
 			// remove alert
-	    	$("#tableWaitingAlert").remove();
+			$("#tableWaitingAlert").remove();
 			if (help)
 				$("#helpEntry").addClass("active");
-			
+
 			updateWins("statsWin", true, false, filterUpdateStats);
 
 			var chartsCreated = createCharts();
@@ -189,7 +147,7 @@ function updateMenu(tab){
 			$("#advMarkerInfo").addClass("disabled");
 			$("#resetMap").addClass("disabled");
 		}
-		else console.log('menue: unknown tab: ' + tab);
+		else console.log('menu: unknown tab: ' + tab);
 };
 		
 $(function () {
@@ -224,7 +182,7 @@ $(function () {
 				world.finishLoading(false);
 				$("#liveView").addClass("active");
 				$("#dbView").removeClass("active");
-				world.resize();
+				world.resizeView();
 			}
 		});
 		// "Database View" entry chosen in toggle button menu -> switch to database view, show side/database window
@@ -239,7 +197,7 @@ $(function () {
 					showHelpPopovers();
 				$("#dbView").addClass("active");
 				$("#liveView").removeClass("active");
-				world.resize();
+				world.resizeView();
 			}
 		});
 		// "Advanced Marker Information" entry chosen in menu -> show more information on hover over markers
@@ -274,9 +232,8 @@ function refreshMap() {
 	// show "no data" alert if map, globe or table is active
 	if (!$("#stats").is(":visible"))
 		showInfoNoData();
-	// reset maps and table
+	// reset views and table
 	world.reset();
-	world.resetTable();
 }
 
 
@@ -296,7 +253,7 @@ $(function () {
 		}
 	});
 	// Disable key control of the maps/globe if modal is active
-	$('#aboutView').on('show', function(e) {world.toggleEnabled();});
-	$('#aboutView').on('hide', function(e) {world.toggleEnabled();});
+	$('#aboutView').on('show', function(e) {world.disableController();});
+	$('#aboutView').on('hide', function(e) {world.enableController();});
 });
 

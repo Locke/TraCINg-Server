@@ -25,12 +25,8 @@ var socket = io.connect("/");	// connect to the current server/port
  
  // do on startup
 $(function () {
-	// activate tooltips
-	$("[rel=tooltip]").tooltip();
 	// no advanced marker info on default
 	advInfo = false;
-	// prevent having lots of blue space above and below the map if the window is narrow
-	$("#map").css("height", function() {return Math.min($("#map").width()/2+50, $(window).height()*0.8);});
 	// hide left window
 	$(leftWin).hide();
 	// center the map
@@ -46,25 +42,10 @@ $(function () {
 	// set datepicker to current date on pageload
 	$("#inputDateDay").datepicker("setDate", "null");
 	$("#inputDateNoDay").datepicker("setDate", "null");
-	
-	// zoom tooltips for jVectorMap
-	$("div.jvectormap-zoomin").each(function() {
-		$(this).rel += "tooltip";
-		$(this).attr("title", "Zoom in");
-	});
-	$("div.jvectormap-zoomout").each(function() {
-		$(this).rel += "tooltip";
-		$(this).attr("title", "Zoom out");
-	});
 });
 
 // resolve hash (link)
 function goToLocationHash(){
-	if(!window.location.hash){
-		window.location.hash = "/map";
-		return;
-	}
-
 	// hide all containers
 	$("#mainContent > div").hide();
 	$("#errorOutput").show();
@@ -72,8 +53,9 @@ function goToLocationHash(){
 	// remove active from all menu entries
 	$("#menutabs > li").removeClass('active');
 	
-	// determine which tab should be shown, default is "map"
-	var tab = window.location.hash && window.location.hash.split("/")[1] || "map";
+	// determine which tab should be shown, default is the "map" view
+	var args = (window.location.hash && window.location.hash || "#/view/map").split("/");
+	var tab = args[1];
 	//console.log("tab: " + tab);
 
 	// show container
@@ -83,10 +65,15 @@ function goToLocationHash(){
 	//console.log("container_post: ", container);
 	
 	// call menu.js
-	updateMenu(tab);
+	updateMenu(tab, args);
 	
-	// toggle active in menu bar
-	var nav_li = $("#tab_"+tab).parent();
+	// toggle active inmenu bar
+	var nav_li;
+	if (tab == "view")
+		nav_li = $("#tab_"+tab+"-"+args[2]).parent();
+	else
+		nav_li = $("#tab_"+tab).parent();
+
 	//console.log("nav_li", nav_li);
 	nav_li && nav_li.addClass('active');
 }
@@ -105,9 +92,6 @@ function toggleCenterDivs() {
 // do on resize
 $(window).resize(function() {
 	toggleCenterDivs();
-	// prevent having lots of blue space above and below the map if the window is narrow
-	// $("#map").width()/2+50: /2 because the map is 2:1 format, +50 because the zoom buttons shall not overlap the map
-	$("#map").css("height", function() {return Math.min($("#map").width()/2+50, $(window).height()*0.8);});
 });
 
 
@@ -168,9 +152,7 @@ socket.on("incidents", function (data) {
 // set marks on realtime attacks
 socket.on("markIncident", function(data) {
 	if (live) {
-		world.markIncident(data, live);
-		var tableEntry = world.generateTableEntry(data);
-		world.makeTableEntry(tableEntry);
+		world.markIncidents([data], live);
 	}
 });
 

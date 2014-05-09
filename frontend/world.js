@@ -21,19 +21,10 @@
  * Creates a world object containing a 2d map, 2d streetmap and a 3d globe
  */
 var world = new function() {
+	var self = this;
 
-	// constants
-	var view = {
-		MAP: 0,
-		STREETMAP: 1,
-		GLOBE: 2,
-		NULL: 3,
-	};
 	var currentView;
 
-	var globeObject;						// the 3d globe
-	var mapObject;							// the 2d map
-	var streetmapObject;					// the street map
 	var timeout = 500;						// timeout interval
 	var timer = null;						// timeout id
 	var key = 0;							// current key for delayed database request
@@ -41,132 +32,93 @@ var world = new function() {
 	var requestPaused = ".";				// text to show in speed information if loading is currently paused
 	var attackNumberHash = {};				// hashmap containing the number of attacks per Lat/Lng position
 	var controller = new Controller();
-	
+
+	var views = {};
+
 	/**
 	 * Toggle whether the key control is enabled or not
 	 */
-	this.toggleEnabled = controller.toggleEnabled;
-	
+	this.enableController = controller.enable;
+	this.disableController = controller.disable;
+
+	function addControllerHints(container, callbacks) {
+		if (callbacks.toggle != undefined) {
+			container.append($('<div class="legend-toggle" rel="tooltip" title="Toggle heatmap (keyboard control)">t</div>').tooltip());
+		}
+
+		if (callbacks.zoom != undefined) {
+			container.append($('<div class="legend-up icon-arrow-up" rel="tooltip" title="Zoom in (keyboard control)"></div>').tooltip());
+			container.append($('<div class="legend-down icon-arrow-down" rel="tooltip" title="Zoom out (keyboard control)"></div>').tooltip());
+		}
+
+		if (callbacks.move != undefined) {
+			container.append($('<div class="legend-wasd" rel="tooltip" title="Move (keyboard controls)">w/a/s/d</div>').tooltip());
+		}
+	}
+
 	/**
 	 * Leave maps
 	 */
-	this.leaveMap = function() {
-		currentView = view.NULL;
+	function deactivateView() {
+		if (views[currentView]) views[currentView].container.hide();
+		currentView = null;
 		controller.unregisterCallbacks();
 	}
-	
-	/**
-	 * Show 2d map
-	 */
-	this.showMap = function() {
-		if (mapObject === undefined) {
-			mapObject = new map($('#map'), 'world_mill_en', 'navy');
-			
-		}
-		currentView = view.MAP;
-		controller.registerCallbacks({
-			zoom: function(dir) {
-				if (dir == controller.args.IN)
-					mapObject.zoom(1.6);
-				if (dir == controller.args.OUT)
-					mapObject.zoom(1/1.6);
-			},
-			move: function(dir) {
-				var speed = 120;
-				if (dir == controller.args.LEFT)
-					mapObject.move(speed,0);
-				if (dir == controller.args.RIGHT)
-					mapObject.move(-speed, 0);
-				if (dir == controller.args.UP)
-					mapObject.move(0, speed);
-				if (dir == controller.args.DOWN)
-					mapObject.move(0, -speed);
-			},
-			toggle: undefined,
-		});
+	this.deactivateView = deactivateView;
+
+
+	this.registerView = function(name, v) {
+		// check if view is already registered
+		if (views[name] != undefined)
+			return false;
+
+		views[name] = v;
+
+		addNavbarItem(name);
+
+		return true;
 	}
-	
-	/**
-	 * Show streetmap
-	 */
-	this.showStreetmap = function() {
-		if (streetmapObject === undefined) {
-			streetmapObject = new streetmap('streetmap');
-		}
-		currentView = view.STREETMAP;
-		controller.registerCallbacks({
-			zoom: function(dir) {
-				if (dir == controller.args.IN)
-					streetmapObject.zoom(1);
-				if (dir == controller.args.OUT)
-					streetmapObject.zoom(-1);
-			},
-			move: function(dir) {
-				var speed = 120;
-				if (dir == controller.args.LEFT)
-					streetmapObject.move(speed,0);
-				if (dir == controller.args.RIGHT)
-					streetmapObject.move(-speed, 0);
-				if (dir == controller.args.UP)
-					streetmapObject.move(0, speed);
-				if (dir == controller.args.DOWN)
-					streetmapObject.move(0, -speed);
-			},
-			toggle: undefined,
-		});
+
+	this.initializeView = function(v) {
+		if (views[v].initialized)
+			return;
+
+		var container = createContainer(v);
+
+		addControllerHints(container, views[v].controllerCallbacks);
+
+		views[v].initialize(container);
 	}
-	
-	/**
-	 * Show 3d globe
-	 */
-	this.showGlobe = function() {
-		if (globeObject === undefined) {
-			// create globeObject
-			var container = document.getElementById('globe');
-			// set modifyMarkerLabel function for globe
-			var modifyMarkerLabel = function(label) {
-					if (!advInfo) {
-						var splittedLabel = label.split(";");
-						label = splittedLabel[0];
-					}
-					return label;
-			};
-			// set setCountryLabel function for globe
-			var setCountryLabel = function(cc, markers, allMarkers) {
-					var country = countryName[cc];
-					return country + " (" + markers + " attacks of " + allMarkers + " total)";
-			};
-			globeObject = new GLOBE.main(container, "extern/globe/images/", {
-				'modifyMarkerLabel': modifyMarkerLabel,
-				'setCountryLabel': setCountryLabel
-			});
-		}
-		else
-			globeObject.resize();
-		currentView = view.GLOBE;
-		controller.registerCallbacks({
-			zoom: function(dir) {
-				if (dir == controller.args.IN)
-					globeObject.zoom(100);
-				if (dir == controller.args.OUT)
-					globeObject.zoom(-100);
-			},
-			move: function(dir) {
-				if (dir == controller.args.LEFT)
-					globeObject.rotate(-0.000001, 0);
-				if (dir == controller.args.RIGHT)
-					globeObject.rotate(0.000001, 0);
-				if (dir == controller.args.UP)
-					globeObject.rotate(0, 0.0000005);
-				if (dir == controller.args.DOWN)
-					globeObject.rotate(0, -0.0000005);
-			},
-			toggle: function() {
-				globeObject.toggleView();
-			},
-		});
+
+	function createContainer(v) {
+		var c = $('<div id="' + v + '" class="world-view" />');
+		$('#view').append(c);
+		return c;
 	}
-	
+
+	function addNavbarItem(v) {
+		var x = $('<li onhelpactive="help-outline"><a id="tab_view-'+v+'" href="#/view/'+v+'">'+views[v].viewOptions.navbar.title+'</a></li>');
+		var divider = $("#menutabs > li.divider-vertical");
+		x.insertBefore(divider[1]);
+	}
+
+	this.activateView = function(v) {
+		$('#viewAlert').remove();
+		if (views[currentView] && views[currentView].initialized) views[currentView].container.hide();
+
+		if (!views[v]) {
+			currentView = undefined;
+			showalert("viewAlert", 'View Error!', "Unknown view: " + v, 'error', false);
+			return;
+		}
+
+		currentView = v;
+		this.initializeView(currentView);
+		controller.registerCallbacks(views[currentView].controllerCallbacks);
+
+		views[currentView].container.show();
+	}
+
 	/**
 	 * Delay database markings
 	 */
@@ -191,8 +143,7 @@ var world = new function() {
 			//console.log(timeout);
 			timer = setTimeout(
 				function() {
-					world.markIncident(data[key], live);
-					makeTableEntry(generateTableEntry(data[key]));
+					world.markIncidents([data[key]], live);
 					key++;
 					delayedMarking(data, live);
 				},
@@ -201,12 +152,7 @@ var world = new function() {
 		} else {
 			// mark all incidents at once if timeout interval is 0
 			if (timeout == 0) {
-				var tableEntries = [];
-				for (var i = key; i < data.length; i++) {
-					world.markIncident(data[i], live, true);
-					tableEntries.push(generateTableEntry(data[i]));
-				}
-				makeTableEntry(tableEntries);
+				world.markIncidents(data.slice(key), live, true);
 			}
 			
 			if (data.length > 0) {
@@ -302,51 +248,44 @@ var world = new function() {
 	}
 	
 	/**
-	 * Mark an incident on the 2d map, the street map and the 3d globe
+	 * Mark incidents on all loaded views
 	 */
-	this.markIncident = function(data, live, noAnimation) {
+	this.markIncidents = function(data, live, noAnimation) {
+		/*
+		// TODO: broken in merge with dynamicviews
 		if (!data.src || !data.src.ll || (!data.src.ll[0] && !data.src.ll[1]) )
 			return;
+		*/
 
 		// remove alert saying "Waiting for attacks..."
 		$("#tableWaitingAlert").remove();
 	
 		// update hashmap for displaying number of attacks per LatLng
-		llHash = new String(data.src.ll[0]) + new String(data.src.ll[1]);
-		if (attackNumberHash[llHash] != undefined) {
-			attackNumberHash[llHash]++;
-		} else {
-			attackNumberHash[llHash] = 1;
-		}
+		attackNumberHashAdd(data);
 	
 		// define source color and label
 		var sourceColor = "red";
-		var sourceLabel = getLabel(data, live);
+		for (var i in data)
+			data[i].src.label = getLabel(data[i], live);
 		
 		// each view has it own marker key
-		var mapKey;
-		var streetmapKey;
-		var globeKey;
-		// mark on 2d map and try to animate
-		if (mapObject != undefined) {
-			mapKey = mapObject.addMarker(data.src.cc, data.src.ll, sourceColor, sourceLabel);
-			if (currentView == view.MAP && !noAnimation) {
-				var pos = mapObject.getPosition(data.src.ll[0], data.src.ll[1]);
-				animateMarker(pos.x, pos.y, sourceColor, "#map", mapKey);
-			}
+		var keys = [];
+
+		// add marker to all views ..
+		for (var i in views) {
+			if (views[i].initialized)
+				keys[i] = views[i].addIncidents(data, sourceColor);
 		}
-		// mark on streetmap and try to animate
-		if (streetmapObject != undefined) {
-			streetmapKey = streetmapObject.addMarker(data.src.ll, sourceColor, sourceLabel);
-			if (currentView == view.STREETMAP && !noAnimation) {
-				var pos = streetmapObject.getPosition(data.src.ll[0], data.src.ll[1]);
-				animateMarker(pos.x, pos.y, sourceColor, "#streetmap", streetmapKey);
+
+		// .. and try to animate it
+		if (!noAnimation && views[currentView] && views[currentView].viewOptions.hasMarker && !views[currentView].viewOptions.animatesMarker) {
+			var j = 0;
+			for (var i in data) {
+				var pos = views[currentView].getPosition(data[i].src.ll[0], data[i].src.ll[1]);
+				if (pos != undefined)
+					animateMarker(pos.x, pos.y, sourceColor, views[currentView].container, keys[currentView][j]);
+				j++;
 			}
-		}
-		// mark on 3d map
-		if (globeObject != undefined && globeObject.addMarker != undefined) {
-			globeKey = globeObject.addMarker(data.src.cc, data.src.ll[0], data.src.ll[1], sourceLabel);
-			// globe has its own mechanism to animate a marker
 		}
 		
 		// set timeout to remove marker if in live view
@@ -355,79 +294,83 @@ var world = new function() {
 			setTimeout(
 				function() {
 					// update hashmap for displaying number of attacks per LatLng
-					llHash = new String(data.src.ll[0]) + new String(data.src.ll[1]);
-					if (attackNumberHash[llHash] > 0) {
-						attackNumberHash[llHash]--;
-					} else {
-						attackNumberHash[llHash] = undefined;
+					attackNumberHashRemove(data);
+
+					// remove marker on views
+					for (var i in keys) {
+						if (keys[i] != undefined)
+							views[i].removeMarkers(keys[i]);
 					}
-					// remove marker on 2d maps and globe
-					if (mapKey != undefined && mapObject != undefined)
-						mapObject.removeMarker(mapKey);
-					if (streetmapKey != undefined && streetmapObject != undefined)
-						streetmapObject.removeMarker(streetmapKey);
-					if (globeKey != undefined && globeObject != undefined)
-						globeObject.removeMarker(globeKey);
 				},
 				expireTime
 			);
 		}
 	}
-	
+
+	function attackNumberHashAdd(arr) {
+		for (var i in arr) {
+			var llHash = new String(arr[i].src.ll[0]) + "_" + new String(arr[i].src.ll[1]);
+			if (attackNumberHash[llHash] != undefined) {
+				attackNumberHash[llHash]++;
+			} else {
+				attackNumberHash[llHash] = 1;
+			}
+		}
+	}
+
+	function attackNumberHashRemove(arr) {
+		for (var i in arr) {
+			var llHash = new String(arr[i].src.ll[0]) + "_" + new String(arr[i].src.ll[1]);
+			if (attackNumberHash[llHash] > 0) {
+				attackNumberHash[llHash]--;
+			} else {
+				attackNumberHash[llHash] = undefined;
+			}
+		}
+	}
+
+	function attackNumberHashGet(data) {
+		var llHash = new String(data.src.ll[0]) + "_" + new String(data.src.ll[1]);
+		return attackNumberHash[llHash];
+	}
+
 	/**
-	 * State whether there is a marker on the jVectorMap
+	 * State whether the current view has at least one incident
 	 */
-	this.jvmHasMarker = function() {
-		if (mapObject != undefined) {
-			return mapObject.hasMarker();
+	this.hasCurrentlyIncidents = function() {
+		if (views[currentView] != undefined) {
+			return views[currentView].hasIncidents();
+		}
+		return false;
+	}
+
+	/**
+	 * State whether the current view want to enable advMarkerInfo button
+	 */
+	this.showAdvMarkerInfo = function() {
+		if (views[currentView] != undefined) {
+			return views[currentView].viewOptions.showAdvMarkerInfo;
 		}
 		return false;
 	}
 	
 	/**
-	 * State whether there is a marker on the streetmap
-	 */
-	this.stMapHasMarker = function() {
-		if (streetmapObject != undefined) {
-			return streetmapObject.hasMarker();
-		}
-		return false;
-	}
-	
-	/**
-	 * State whether there is a marker on the globe
-	 */
-	this.globeHasMarker = function() {
-		if (globeObject != undefined && globeObject.hasMarker != undefined) {
-			return globeObject.hasMarker();
-		}
-		return false;
-	}
-	
-	/**
-	 * Reset every marker on the 2d map, the streetmap and the 3d globe
+	 * Reset every incident
 	 */
 	this.reset = function() {
-		// reset 2d maps abd globe
-		mapObject && mapObject.reset();
-		streetmapObject && streetmapObject.reset();
-		globeObject && globeObject.reset();
-		
+		// reset views
+		for (var key in views) {
+			if (views[key].initialized)
+				views[key].reset();
+		}
+
 		attackNumberHash = {};
-		
+
 		// reset progress bar
 		$('.bar').css('width', 0);
 		// reset progress information
 		$('#requestInfo').text('');
 		//TODO also influence x/y entries loaded and successfully loaded y items?
-	}
-	
-	/**
-	 * Reset the table
-	 */
-	this.resetTable = function() {
-		// reset table
-		$("#attackTable").dataTable().fnClearTable();
 	}
 	
 	/**
@@ -440,8 +383,7 @@ var world = new function() {
 			label += "Live data";
 		else
 			label += "Database data";
-		var llKey = new String(data.src.ll[0]) + new String(data.src.ll[1]);
-		var num = attackNumberHash[llKey];
+		var num = attackNumberHashGet(data);
 		if (num != null) {
 			if (num == 1)
 				label += ": " + num + " attack";
@@ -496,66 +438,8 @@ var world = new function() {
 		
 		return dateFormat;
 	}
-	
-	/**
-	 * Generate one table entry and return it as a string to be inserted
-	 */
-	function generateTableEntry(incident) {
-		// set city and country names
-		if (incident.src.city == undefined)
-			incident.src.city = "";
-		if (incident.dst.country == undefined)
-			incident.dst.country = "";
-		if (incident.dst.city == undefined)
-			incident.dst.city = "";
-		if (incident.src.port == 0)
-			incident.src.port = "";
-		if (incident.dst.port == 0)
-			incident.dst.port = "";
-		
-		//format date
-		dateFormat = formatDate(incident);
+	this.formatDate = formatDate;
 
-		var log = '';
-		if (incident.hasLog){
-			log = "<a href='#showLog' data-toggle='modal' onclick='javascript:showLog(" + incident.id + ");'>show log</a>";
-		}
-		
-		var type = typeid2str(incident.type);
-		var typeDescr = typeid2descr(incident.type);
-		
-		// popup for md5sum so it does not take so much space in the table
-		var md5 = "";
-		if (incident.md5sum && incident.md5sum != '') {
-			var virustotalLink = "https://www.virustotal.com/en/search/?query=" + incident.md5sum;
-			var popoverContent = "Md5sum of malware hash: " + incident.md5sum + "<br \\> Get more information about this malware from virustotal: <a href=\'" + virustotalLink + "\' target='_blank'>Click here</a> (by doing so you will open a different website)!";
-			var url = "\"./extern/bootstrap/images/glyphicons-halflings.png\"";
-			md5 = "<a class='btn' rel='popover' data-html='true' data-content=\"" + popoverContent + "\" data-animation='false' data-placement='left'><i class='icon-info-sign' style='background-image: url("+ url +");'></i></a>";
-		}
-		
-		var authorized = "";
-		if (incident.authorized) {
-			authorized = "<p class='text-success'>Yes</p>";
-		} else {
-			authorized = "<p class='text-error'>No</p>";
-		}
-
-		//make entry
-		var attackTableEntry = [incident.sensortype, incident.sensorname, '<span title="' + typeDescr + '">' + type + '</span>', dateFormat, incident.src.network, incident.src.country, incident.src.city, incident.src.port, incident.dst.network, incident.dst.country, incident.dst.city, incident.dst.port, authorized, md5, log];
-		return attackTableEntry;
-	}
-	this.generateTableEntry = generateTableEntry;
-	
-	/**
-	 * Make table entries (includes time formatting)
-	 */
-	function makeTableEntry(attackTableEntries) {
-		$("#attackTable").dataTable().fnAddData(attackTableEntries);
-		makePopovers();
-	}
-	this.makeTableEntry = makeTableEntry;
-	
-	
 	/**
 	 * Make popovers in the table
 	 */
@@ -591,29 +475,27 @@ var world = new function() {
 			$("#" + key + ".markerAnimation").remove
 		);
 	}
-	
 
-	function updateAttackTableHeight() {
-		var attackTable = $("#attackTable").dataTable();
-	
-		var height = $(window).height();
-	
-		height -= $("#table .dataTables_scrollBody").offset().top;
-		height -= $("#table .dataTables_scroll + div").height();
-	
-		console.log("attackTableHeight: " + height);
-	
-		$("#table .dataTables_scrollBody").css({"max-height": height});
-	}
 
 	/**
-	 * resize table
+	 * resize current view
 	 */
-	function resize() {
-		updateAttackTableHeight();
-		$("#attackTable").dataTable().fnDraw();
+	function resizeView() {
+		if (views[currentView] && views[currentView].initialized) views[currentView].resize();
 	}
-	this.resize = resize;
+	this.resizeView = resizeView;
+
+	this.showHelpPopovers = function() {
+		for (var i in views) {
+			$('#tab_view-'+i).parent().popover({title: views[i].viewOptions.navbar.title, content: views[i].viewOptions.navbar.description, trigger: trigger, placement: 'bottom'});
+			// a view may want to display additional help popovers
+			views[i].showHelpPopovers();
+		}
+	}
+
+	$(window).resize($.throttle(250,function() {
+		self.resizeView();
+	}));
 }
 
 function showLog(id){
@@ -626,20 +508,17 @@ function showLog(id){
 	});
 }
 
+// TODO: may use a config file to specify which views should be used
 $(function(){
-	$("#attackTable").dataTable({
-		"aaSorting": [[ 3, "desc" ]], // order by date, new items first
-		"sScrollY": "100%",
-		"fnDrawCallback": function() {
-			world.makePopovers();
-		}
-	});
+	world.registerView('map', new MapView('world_mill_en', 'navy'));
+	world.registerView('streetmap', new StreetmapView());
+	world.registerView('globe', new GlobeView());
+	world.registerView('table', new TableView());
+	world.initializeView('table');
 
 	setTimeout(function() {
-		world.resize();
+		world.resizeView();
 	}, 10);
-});
 
-$(window).resize($.throttle(250,function() {
-	world.resize();
-}));
+	//world.registerView('sample', new SampleView($('#table')));
+});

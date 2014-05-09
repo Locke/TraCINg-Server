@@ -114,14 +114,8 @@
 	position: fixed;
 }
 
-/* override globe.css height field */
-.globe-background {
-	height: 80%;
-	width: 80%;
-}
-
-/* maps */
-.maps {
+/* world-view */
+.world-view {
 	position: absolute;
 	width: 80%;
 	height: 80%;

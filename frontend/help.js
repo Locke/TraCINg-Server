@@ -22,6 +22,7 @@
  
 // show help popovers
 function showHelpPopovers() {
+	world.showHelpPopovers();
 	titleHelp();
 	mainMenuHelp();
 	dbHelp();
@@ -46,18 +47,6 @@ function titleHelp() {
 function mainMenuHelp() {
 	// help view for "Live View"/"Database View" toggle navbar buttons
 	$('#toggleView').popover({html: true, title:'Toogle View', content:"Click one of these buttons to toggle between live and dabase view. <br><strong>Live View</strong>: Shows you attacks currently detected by our sensors, updating with every attack. <br><strong>Database View</strong>: Enables you to request past attacks which will be shown on the maps and globe and in the table.", trigger:trigger, placement:'bottom'});
-	
-	// help view for "Country View" navbar button
-	$('#2DViewEntry').popover({title:'2D Map View', content:"Click here for a 2D view of the attacks. This map shows the sources of attacks detected by our sensors. For more detailed information, hover over countries and markers. A countries color represents the number of attacks originating from there; the darker the red, the more attacks originate from this country. You can also zoom in and out using the mouse wheel and move around the map by moving the mouse while holding down the left mouse button (if zoomed in). Keyboard controls are described in the bottom left corner.", trigger:trigger, placement:'bottom'});
-	
-	// help view for "Map View" navbar button
-	$('#StreetViewEntry').popover({title:'Streetmap View', content:"Click here for a streetmap view of the attacks (also in 2D). This map shows the sources of attacks detected by our sensors. For more detailed information, click the markers. Coloring and country hover is not supported here. You can also zoom in and out using the mouse wheel and move around the map by moving the mouse while holding down the left mouse button. Keyboard controls are described in the bottom left corner.", trigger:trigger, placement:'bottom'});
-	
-	// help view for "3D View" navbar button
-	$('#3DViewEntry').popover({title:'3D Globe View', content:"Click here for a 3D view of the attacks. This globe shows the sources of attacks detected by our sensors. For more detailed information, hover over countries and markers. A countries color represents the number of attacks originating from there; the darker the red, the more attacks originate from this country. Toggle a heatmap by pressing \"t\" on your keyboard. You can also zoom in and out using the mouse wheel and move the globe by moving the mouse while holding down the left mouse button. Keyboard controls are described in the bottom left corner.", trigger:trigger, placement:'bottom'});
-	
-	// help view for "Table View" navbar button
-	$('#tableViewEntry').popover({title:'Table View', content:"Click here for a table representation of the attack data received from the sensors. This table always shows exactly the attacks which are currently represented on the maps/globe (no less, no more). This behavior is independent from live or database view. Hover over the entries in \"Attack Types\" to learn more about them.", trigger:trigger, placement:'bottom'});
 	
 	// help view for "Statistics" navbar button
 	$('#statsEntry').popover({title:'Statistic View', content:"Click here for a statistic on our assembled attack data. The top left pie chart gives you an overview of the relative distribution of the number of attacks given attack types or countries. The major statistic shows the number of attacks by type or country over time (addatively).", trigger:trigger, placement:'bottom'});
