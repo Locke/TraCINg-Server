@@ -102,12 +102,14 @@ var world = new function() {
 	}
 
 	this.activateView = function(v) {
+		$('#viewAlert').remove();
+		if (views[currentView] && views[currentView].initialized) views[currentView].container.hide();
+
 		if (!views[v]) {
-			console.warn("Unknown view: " + v);
+			currentView = undefined;
+			showalert("viewAlert", 'View Error!', "Unknown view: " + v, 'error', false);
 			return;
 		}
-
-		if (views[currentView] && views[currentView].initialized) views[currentView].container.hide();
 
 		currentView = v;
 		this.initializeView(currentView);
