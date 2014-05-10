@@ -21,18 +21,23 @@
  * @param map				the name of the jvectormap map
  * @param backgroundColor	the background color of the map
  */
-var MapView = function(map, backgroundColor) {
+var MapView = function(options) {
 	var self = this;
 
-	this.viewOptions = {
-		hasMarker: true,		// the view does display markers
-		animatesMarker: false,		// map does not animate them -> world should do it
-		showAdvMarkerInfo: true,	// enable advMarkerInfo button
-		navbar: {
-			title: "Country View",
-			description: "Click here for a 2D view of the attacks. This map shows the sources of attacks detected by our sensors. For more detailed information, hover over countries and markers. A countries color represents the number of attacks originating from there; the darker the red, the more attacks originate from this country. You can also zoom in and out using the mouse wheel and move around the map by moving the mouse while holding down the left mouse button (if zoomed in). Keyboard controls are described in the bottom left corner.",
-		}
+	this.options = {
+		view: {
+			hasMarker: true,		// the view does display markers
+			animatesMarker: false,		// map does not animate them -> world should do it
+			showAdvMarkerInfo: true,	// enable advMarkerInfo button
+			navbar: {
+				title: "Country View",
+				description: "Click here for a 2D view of the attacks. This map shows the sources of attacks detected by our sensors. For more detailed information, hover over countries and markers. A countries color represents the number of attacks originating from there; the darker the red, the more attacks originate from this country. You can also zoom in and out using the mouse wheel and move around the map by moving the mouse while holding down the left mouse button (if zoomed in). Keyboard controls are described in the bottom left corner.",
+			},
+		},
+		jvmOptions: {},
 	};
+
+	$.extend(true, this.options, options);
 
 	var mapObject;
 	var uniqueKey = 0;						// unique key for marker id
@@ -65,10 +70,11 @@ var MapView = function(map, backgroundColor) {
 	this.initialized = false;
 	this.initialize = function(container) {
 		this.container = container;
-		mapObject = new jvm.WorldMap( {	// jvectormap
+
+		var jvmOptions = {
 			container: container,
-			map: map,
-			backgroundColor: backgroundColor,
+			map: "world_mill_en",
+			backgroundColor: "navy",
 			markers: [],
 			series: {
 				regions: [{ /* region means in our context country, as we are using a worldmap */
@@ -109,8 +115,11 @@ var MapView = function(map, backgroundColor) {
 					label.html(label.text());
 				}
 			}
-		});
+		};
 
+		$.extend(true, jvmOptions, this.options.jvmOptions);
+
+		mapObject = new jvm.WorldMap(jvmOptions);
 
 		// zoom tooltips for jVectorMap
 		$("div.jvectormap-zoomin").each(function() {

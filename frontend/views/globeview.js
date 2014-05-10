@@ -16,19 +16,23 @@
  * limitations under the License.
  */
 
-var GlobeView = function() {
+var GlobeView = function(options) {
 	console.log("globeview", arguments);
 	var self = this;
 
-	this.viewOptions = {
-		hasMarker: true,		// the view does display markers
-		animatesMarker: true,		// globe animates them -> world shouldn't do it
-		showAdvMarkerInfo: true,	// enable advMarkerInfo button
-		navbar: {
-			title: "3D View",
-			description: "Click here for a 3D view of the attacks. This globe shows the sources of attacks detected by our sensors. For more detailed information, hover over countries and markers. A countries color represents the number of attacks originating from there; the darker the red, the more attacks originate from this country. Toggle a heatmap by pressing \"t\" on your keyboard. You can also zoom in and out using the mouse wheel and move the globe by moving the mouse while holding down the left mouse button. Keyboard controls are described in the bottom left corner.",
+	this.options = {
+		view: {
+			hasMarker: true,		// the view does display markers
+			animatesMarker: true,		// globe animates them -> world shouldn't do it
+			showAdvMarkerInfo: true,	// enable advMarkerInfo button
+			navbar: {
+				title: "3D View",
+				description: "Click here for a 3D view of the attacks. This globe shows the sources of attacks detected by our sensors. For more detailed information, hover over countries and markers. A countries color represents the number of attacks originating from there; the darker the red, the more attacks originate from this country. Toggle a heatmap by pressing \"t\" on your keyboard. You can also zoom in and out using the mouse wheel and move the globe by moving the mouse while holding down the left mouse button. Keyboard controls are described in the bottom left corner.",
+			}
 		}
 	};
+
+	$.extend(true, this.options, options);
 
 	// create globeObject
 	var globe;

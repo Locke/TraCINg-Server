@@ -16,20 +16,24 @@
  * limitations under the License.
  */
 
-var SampleView = function() {
+var SampleView = function(options) {
 	console.log("sampleview", arguments);
 
 	var self = this;
 
-	this.viewOptions = {
-		hasMarker: false,		// the view does not display any markers
-		animatesMarker: false,		// does not animate them -> world should do it
-		showAdvMarkerInfo: false,	// disable advMarkerInfo button
-		navbar: {
-			title: "Sample View",
-			description: "Click here for the Sample View.",
+	this.options = {
+		view: {
+			hasMarker: false,		// the view does not display any markers
+			animatesMarker: false,		// does not animate them -> world should do it
+			showAdvMarkerInfo: false,	// disable advMarkerInfo button
+			navbar: {
+				title: "Sample View",
+				description: "Click here for the Sample View.",
+			}
 		}
 	};
+
+	$.extend(true, this.options, options);
 
 	this.controllerCallbacks = {
 		zoom: function(dir) {

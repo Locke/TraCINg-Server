@@ -97,7 +97,7 @@ var world = new function() {
 	}
 
 	function addNavbarItem(v) {
-		var x = $('<li onhelpactive="help-outline"><a id="tab_view-'+v+'" href="#/view/'+v+'">'+views[v].viewOptions.navbar.title+'</a></li>');
+		var x = $('<li onhelpactive="help-outline"><a id="tab_view-'+v+'" href="#/view/'+v+'">'+views[v].options.view.navbar.title+'</a></li>');
 		var divider = $("#menutabs > li.divider-vertical");
 		x.insertBefore(divider[1]);
 	}
@@ -272,7 +272,7 @@ var world = new function() {
 		}
 
 		// .. and try to animate it
-		if (!noAnimation && views[currentView] && views[currentView].viewOptions.hasMarker && !views[currentView].viewOptions.animatesMarker) {
+		if (!noAnimation && views[currentView] && views[currentView].options.view.hasMarker && !views[currentView].options.view.animatesMarker) {
 			var j = 0;
 			for (var i in data) {
 				var pos = views[currentView].getPosition(data[i].src.ll[0], data[i].src.ll[1]);
@@ -343,7 +343,7 @@ var world = new function() {
 	 */
 	this.showAdvMarkerInfo = function() {
 		if (views[currentView] != undefined) {
-			return views[currentView].viewOptions.showAdvMarkerInfo;
+			return views[currentView].options.view.showAdvMarkerInfo;
 		}
 		return false;
 	}
@@ -481,7 +481,7 @@ var world = new function() {
 
 	this.showHelpPopovers = function() {
 		for (var i in views) {
-			$('#tab_view-'+i).parent().popover({title: views[i].viewOptions.navbar.title, content: views[i].viewOptions.navbar.description, trigger: trigger, placement: 'bottom'});
+			$('#tab_view-'+i).parent().popover({title: views[i].options.view.navbar.title, content: views[i].options.view.navbar.description, trigger: trigger, placement: 'bottom'});
 			// a view may want to display additional help popovers
 			views[i].showHelpPopovers();
 		}
@@ -504,7 +504,7 @@ function showLog(id){
 
 // TODO: may use a config file to specify which views should be used
 $(function(){
-	world.registerView('map', new MapView('world_mill_en', 'navy'));
+	world.registerView('map', new MapView());
 	world.registerView('streetmap', new StreetmapView());
 	world.registerView('globe', new GlobeView());
 	world.registerView('table', new TableView());
@@ -514,5 +514,5 @@ $(function(){
 		world.resizeView();
 	}, 10);
 
-	//world.registerView('sample', new SampleView($('#table')));
+	//world.registerView('sample', new SampleView({view: {navbar: {description: "This text overwrites the default description"}}}));
 });

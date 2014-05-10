@@ -16,18 +16,22 @@
  * limitations under the License.
  */
 
-var StreetmapView = function() {
+var StreetmapView = function(options) {
 	var self = this;
 
-	this.viewOptions = {
-		hasMarker: true,		// the view does display markers
-		animatesMarker: false,		// map does not animate them -> world should do it
-		showAdvMarkerInfo: true,	// enable advMarkerInfo button
-		navbar: {
-			title: "Map View",
-			description: "Click here for a streetmap view of the attacks (also in 2D). This map shows the sources of attacks detected by our sensors. For more detailed information, click the markers. Coloring and country hover is not supported here. You can also zoom in and out using the mouse wheel and move around the map by moving the mouse while holding down the left mouse button. Keyboard controls are described in the bottom left corner.",
+	this.options = {
+		view: {
+			hasMarker: true,		// the view does display markers
+			animatesMarker: false,		// map does not animate them -> world should do it
+			showAdvMarkerInfo: true,	// enable advMarkerInfo button
+			navbar: {
+				title: "Map View",
+				description: "Click here for a streetmap view of the attacks (also in 2D). This map shows the sources of attacks detected by our sensors. For more detailed information, click the markers. Coloring and country hover is not supported here. You can also zoom in and out using the mouse wheel and move around the map by moving the mouse while holding down the left mouse button. Keyboard controls are described in the bottom left corner.",
+			}
 		}
 	};
+
+	$.extend(true, this.options, options);
 
 	var stmap;
 	var maxKey = 500;					// maximum amount of markers
