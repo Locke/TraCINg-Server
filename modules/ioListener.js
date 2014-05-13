@@ -24,13 +24,14 @@ var socketio = require("socket.io");
 var db = require("./db/db.js");
 
 var fields = require("./fields.js");
-
+var networks = require("./networks.js");
 
 function listen(server) {
 	
 	io = socketio.listen(server);
 
 	io.sockets.on("connection", function (socket) {
+		socket.emit("setNetworks", networks.networkTitles);
 		socket.emit("setFields", fields.fields);
 
 		db.getSensorTypes(function(err, sensors){

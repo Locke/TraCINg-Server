@@ -22,6 +22,8 @@ var Netmask = require('netmask').Netmask
 var config = require("../config.json");
 var networks = require("../networks.json");
 var data = {};
+var networkTitles = {};
+exports.networkTitles = networkTitles;
 
 var paths = {};
 
@@ -49,6 +51,7 @@ function initialize(){
 				}
 			}
 			data[name] = {"netmasks": netmasks, "title": title, "path": path};
+			networkTitles[name] = title;
 		}
 	}
 }

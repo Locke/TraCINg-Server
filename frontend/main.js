@@ -157,6 +157,13 @@ socket.on("markIncident", function(data) {
 });
 
 
+var networks;
+socket.on("setNetworks", function(data) {
+	networks = data;
+
+	// TODO: do stuff with networks
+});
+
 var fields;
 socket.on("setFields", function(data) {
 	fields = data;
