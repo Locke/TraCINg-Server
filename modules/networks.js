@@ -38,7 +38,7 @@ function initialize(){
 	for (var name in networks) {
 		var n = networks[name];
 		if (n) {
-			var comment = n.comment;
+			var title = n.title;
 			var path = getPath(name);
 			var netmasks = [];
 			if (n.networks) {
@@ -48,7 +48,7 @@ function initialize(){
 					netmasks.push(block);
 				}
 			}
-			data[name] = {"netmasks": netmasks, "comment": comment, "path": path};
+			data[name] = {"netmasks": netmasks, "title": title, "path": path};
 		}
 	}
 }

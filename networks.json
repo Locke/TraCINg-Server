@@ -1,6 +1,7 @@
 {
-        "myName1": {"comment": "myComment1", "networks": ["192.168.2.0/24", "10.0.0.0/8"]},
-        "myName2": {"comment": "myComment2", "parent": "myName1"},
-        "myName3": {"comment": "myComment3", "parent": "myName1", "networks": ["172.31.2.0/24"]},
-        "myName4": null
+        "hq":			{"title": "Headquarter",				"networks": ["10.0.0.0/16"]},
+        "hq-dmz":		{"title": "DMZ",		"parent": "hq",		"networks": ["192.168.2.0/24", "10.0.100.0/24"]},
+        "br1":			{"title": "Branch 1",					"networks": ["10.1.0.0/16"]},
+        "br1-wifi-staff":	{"title": "Staff Wifi",		"parent": "br1",	"networks": ["10.1.10.0/24"]},
+        "br1-wifi-guest":	{"title": "Guest Wifi",		"parent": "br1",	"networks": ["10.1.11.0/24"]}
 }
