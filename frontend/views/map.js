@@ -44,7 +44,7 @@ var MapView = function(options) {
 	var maxKey = 500;						// maximum amount of markers
 	var incidentsPerCountry = {};			// incidents per country
 	var incidents = 0;						// total sum of incidents
-	var countryCode = [maxKey];				// country code of every marker
+	var countryCode = Array(maxKey);				// country code of every marker
 
 	this.controllerCallbacks = {
 		zoom: function(dir) {
