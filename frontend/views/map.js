@@ -42,9 +42,9 @@ var MapView = function(options) {
 	var mapObject;
 	var uniqueKey = 0;						// unique key for marker id
 	var maxKey = 500;						// maximum amount of markers
-	var incidentsPerCountry = {};			// incidents per country
+	var incidentsPerRegion = {};			// incidents per region. In case of a country map like the default 'world_mill_en' region means country
 	var incidents = 0;						// total sum of incidents
-	var countryCode = Array(maxKey);				// country code of every marker
+	var regionCode = Array(maxKey);				// region code of every marker
 
 	this.controllerCallbacks = {
 		zoom: function(dir) {
@@ -77,8 +77,7 @@ var MapView = function(options) {
 			backgroundColor: "navy",
 			markers: [],
 			series: {
-				regions: [{ /* region means in our context country, as we are using a worldmap */
-					// serie to display incidents per country
+				regions: [{
 					attribute: "fill",
 					min: -1,
 					max: -2,
@@ -100,7 +99,7 @@ var MapView = function(options) {
 			},
 			// show region label function
 			onRegionLabelShow: function(e, el, code) {
-				var attacks = incidentsPerCountry[code] || 0;
+				var attacks = incidentsPerRegion[code] || 0;
 				if (attacks == 1)
 					el.html(el.html() + " (" + attacks + " attack of " + incidents + " total)");
 				else
@@ -141,7 +140,7 @@ var MapView = function(options) {
 		mapObject.series.regions[0].clear();
 		uniqueKey = 0;
 		incidents = 0;
-		incidentsPerCountry = {};
+		incidentsPerRegion = {};
 	}
 	
 	/**
@@ -162,7 +161,7 @@ var MapView = function(options) {
 	}
 	
 	/**
-	 * Mark incidents on the map and update incidentsPerCountry
+	 * Mark incidents on the map and update incidentsPerRegion
 	 */
 	this.addIncidents = function(arr, color) {
 		var keys = [];
@@ -186,8 +185,8 @@ var MapView = function(options) {
 			uniqueKey = (uniqueKey + 1) % maxKey;
 
 			var cc = data.src.cc;
-			incidentsPerCountry[cc] = (incidentsPerCountry[cc] | 0) + 1;
-			countryCode[key] = cc;
+			incidentsPerRegion[cc] = (incidentsPerRegion[cc] | 0) + 1;
+			regionCode[key] = cc;
 
 			var ll = data.src.ll;
 			var label = data.src.label;
@@ -197,7 +196,7 @@ var MapView = function(options) {
 		mapObject.addMarkers(markers, []);
 
 		// redraw the region coloring
-		redrawIncidentsPerCountry();
+		redrawIncidentsPerRegion();
 
 		return keys;
 	}
@@ -216,15 +215,15 @@ var MapView = function(options) {
 			if (mapObject.markers[key] != undefined)
 				remove.push(key);
 
-			var cc = countryCode[key];
-			if (incidentsPerCountry[cc] > 0) {
-				incidentsPerCountry[cc] = incidentsPerCountry[cc] - 1;
+			var cc = regionCode[key];
+			if (incidentsPerRegion[cc] > 0) {
+				incidentsPerRegion[cc] = incidentsPerRegion[cc] - 1;
 			}
 		}
 
 		mapObject.removeMarkers(remove);
 
-		redrawIncidentsPerCountry();
+		redrawIncidentsPerRegion();
 	}
 	this.removeMarkers = removeMarkers;
 	
@@ -239,10 +238,10 @@ var MapView = function(options) {
 	}
 	
 	/**
-	 * Redraw incidents per country
+	 * Redraw incidents per region
 	 */
-	function redrawIncidentsPerCountry() {
-		mapObject.series.regions[0].setValues(incidentsPerCountry);
+	function redrawIncidentsPerRegion() {
+		mapObject.series.regions[0].setValues(incidentsPerRegion);
 	};
 	
 	/**
