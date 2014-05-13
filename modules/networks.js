@@ -57,14 +57,20 @@ function initialize(){
 initialize();
 
 function search(ip) {
-	if (!ip) return null;
+	if (!ip) return "";
+	
+	var results = [];
 	for (var name in data) {
 		for (var index in data[name].netmasks) {
 			if (data[name].netmasks[index].contains(ip))
-				return data[name].path;
+				results.push(data[name].path);
 		}
 	}
-	return "";
+
+	// order results by number of '/' in path
+	results.sort(function(path){return path.split('/').length});
+	
+	return results[0] || "";
 }
 
 exports.search = search;
