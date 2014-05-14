@@ -25,6 +25,7 @@ var MapView = function(options) {
 	var self = this;
 
 	this.options = {
+		localMap: false,
 		view: {
 			hasMarker: true,		// the view does display markers
 			animatesMarker: false,		// map does not animate them -> world should do it
@@ -172,8 +173,19 @@ var MapView = function(options) {
 		for (var i in arr) {
 			var data = arr[i];
 
-			// skip incidents without a location
-			if (!data.src || !data.src.ll || (!data.src.ll[0] && !data.src.ll[1])) {
+			/*
+			allow either incidents without a location and localMap, or incidents with a location and not localMap
+
+			localMap	hasLocation	allowed
+			0		0		0
+			0		1		1
+			1		0		1
+			1		1		0
+			=> XOR
+			*/
+			var hasLocation = !(!data.src || !data.src.ll || (!data.src.ll[0] && !data.src.ll[1]));
+			var allowed = this.options.localMap ^ hasLocation;
+			if (!allowed) {
 				incidents--;
 				continue;
 			}
@@ -184,16 +196,27 @@ var MapView = function(options) {
 			// increment key
 			uniqueKey = (uniqueKey + 1) % maxKey;
 
-			var cc = data.src.cc;
-			incidentsPerRegion[cc] = (incidentsPerRegion[cc] | 0) + 1;
-			regionCode[key] = cc;
+			var region;
+			if (this.options.localMap) {
+				var s = data.src.network.split('/');
+				region = s[s.length-1];
+			}
+			else {
+				region = data.src.cc;
+			}
 
-			var ll = data.src.ll;
-			var label = data.src.label;
-			markers[key] = {latLng: ll, style: {r: 5, fill: color}, name: label};
+			incidentsPerRegion[region] = (incidentsPerRegion[region] | 0) + 1;
+			regionCode[key] = region;
+
+			if (!this.options.localMap) {
+				var ll = data.src.ll;
+				var label = data.src.label;
+				markers[key] = {latLng: ll, style: {r: 5, fill: color}, name: label};
+			}
 		}
 
-		mapObject.addMarkers(markers, []);
+		if (!this.options.localMap)
+			mapObject.addMarkers(markers, []);
 
 		// redraw the region coloring
 		redrawIncidentsPerRegion();
@@ -215,13 +238,14 @@ var MapView = function(options) {
 			if (mapObject.markers[key] != undefined)
 				remove.push(key);
 
-			var cc = regionCode[key];
-			if (incidentsPerRegion[cc] > 0) {
-				incidentsPerRegion[cc] = incidentsPerRegion[cc] - 1;
+			var region = regionCode[key];
+			if (incidentsPerRegion[region] > 0) {
+				incidentsPerRegion[region] = incidentsPerRegion[region] - 1;
 			}
 		}
 
-		mapObject.removeMarkers(remove);
+		if (!this.options.localMap)
+			mapObject.removeMarkers(remove);
 
 		redrawIncidentsPerRegion();
 	}
@@ -231,7 +255,7 @@ var MapView = function(options) {
 	 * Get the pixel position of a geographic point
 	 */
 	this.getPosition = function(latitude, longitude) {
-		if (!latitude && !longitude)
+		if (!latitude && !longitude || this.options.localMap)
 			return undefined;
 		else
 			return mapObject.latLngToPoint(latitude, longitude);
