@@ -136,6 +136,13 @@ var TableView = function(options) {
 	}
 
 
+	function networkToString(network) {
+		var arr = network.split('/').slice(1);
+		for (var key in arr) {
+			arr[key] = networks[arr[key]] || arr[key];
+		}
+		return arr.join(' ⇒ ');
+	}
 
 	/**
 	 * Generate one table entry and return it as a string to be inserted
@@ -180,8 +187,11 @@ var TableView = function(options) {
 			authorized = "<p class='text-error'>No</p>";
 		}
 
+		srcNetwork = networkToString(incident.src.network);
+		dstNetwork = networkToString(incident.dst.network);
+
 		//make entry
-		var attackTableEntry = [incident.sensortype, incident.sensorname, '<span title="' + typeDescr + '">' + type + '</span>', dateFormat, incident.src.network, incident.src.country, incident.src.city, incident.src.port, incident.dst.network, incident.dst.country, incident.dst.city, incident.dst.port, authorized, md5, log];
+		var attackTableEntry = [incident.sensortype, incident.sensorname, '<span title="' + typeDescr + '">' + type + '</span>', dateFormat, srcNetwork, incident.src.country, incident.src.city, incident.src.port, dstNetwork, incident.dst.country, incident.dst.city, incident.dst.port, authorized, md5, log];
 		return attackTableEntry;
 	}
 
