@@ -17,7 +17,7 @@
  */
 
 
-var Netmask = require('netmask').Netmask
+var Netmask = require('netmask').Netmask;
 
 var config = require("../config.json");
 var networks = require("../networks.json");

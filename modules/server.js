@@ -25,7 +25,7 @@
 // load node modules
 var http = require("http");
 var https = require("https");
-var statics = require("node-static");	// requires 'npm install node-static'
+var statics = require("node-static");
 
 function start(postHandle, ioListener, config, options) {
 	
