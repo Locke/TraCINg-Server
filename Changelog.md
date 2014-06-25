@@ -1,15 +1,15 @@
 Changelog
 =========
 
-## WIP ##
+## v1.1.0-RC1 ##
 
-* support for private networks
-
-## branch dynamicviews ##
-
-* restructe world.js so that views can be added dynamicly
-** to create a new view make a copy of sampleview
-** to decide which views should be loaded at bottom of world.js
+* support for custom networks
+** needs to be enabled in config.json
+** networks need to be defined in networks.json
+** a sample 2D view is provided
+* restructure world.js
+** it is now possible to decide which views should be available
+** to create a new view make a copy of the sampleview; enable it at the bottom of world.js
 
 ## v1.0.2 ##
 

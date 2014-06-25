@@ -42,30 +42,35 @@ Thus authorizing a sensor requires the sensor to send a certificate request to t
 certificate from the CA.
 
 ### Frontend ###
-The website visualizes malware attacks from the internet in five different ways (described below). Incidents
-will be shown live if in **Live-View** or can be retrieved by a database query if in **Database-View**.
+The website visualizes malware attacks either per single incident in the view or aggregated in the statistics tab.
 Additional features are an about and help screen to guide and inform the user.
 
-#### 2D Country View ####
+#### Views ####
+Incidents will be shown live if in **Live-View** or can be retrieved by a database query if in **Database-View**.
+
+##### 2D Country View #####
 The country view shows a map which contains only country borders.
 It can be moved and zoomed both with the mouse or the keyboard.  
 Attacks are shown as a marker in the country where the attackers IP was mapped to. Hovering a marker shows
 information about this specific attack and how many attacks originated from the same place.  
 Additionally countries are colored in a red shade depending on the ratio of markers in that country.
 
-#### 2D Map View ####
+##### 2D Map View #####
 The map view behaves much like the country view but omits coloring of the countries. Instead it shows a
 more detailed map using [OpenStreetMap](http://www.openstreetmap.org/) map material.
 
-#### 3D Globe ####
+##### 3D Globe #####
 The globe behaves much like the country view in the 3D space with the enhancement of adding a heatmap-like
 view of the markers which can be toggled with the keyboard.
 
-#### Table View ####
+##### Table View #####
 The table view shows a sort- and searchable table containing detailed information about each attack. If the sensor
 was able to copy the malware the malwares md5sum is given in addition to a link to
 [VirusTotal](https://www.virustotal.com/) where one can get more detailed information about this specific malware.
 It is also possible to have a look into logs which dionaea creates to record every attack.
+
+##### Custom views #####
+TODO
 
 #### Statistics ####
 The statistic shows either the number of attacks per country or per type in a specific time span.
@@ -163,7 +168,8 @@ The server comes with a configuration file (config.json) which must be adapted t
 		"caPath": "ssl/ca_cert.pem",
 		"requestCert": true,
 		"rejectUnauthorized": false
-	}
+	},
+	"allowLocal": false
 }
 ```
 * db: the path to the database storing attack data monitored by sensors
@@ -178,6 +184,7 @@ The server comes with a configuration file (config.json) which must be adapted t
   * caPath: the path to the CA certificate
   * requestCert: if true the server requests a certificate to check sensors authenticity
   * rejectUnauthorized: if true unauthorized sensors are rejected
+* allowLocal: TODO
 
 ## Server Interface ##
 A sensor must stick to the following JSON notation of a data entry to be able to send data to this server. Note that
