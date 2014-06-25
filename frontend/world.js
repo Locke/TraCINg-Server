@@ -505,7 +505,7 @@ function showLog(id){
 // TODO: may use a config file to specify which views should be used
 $(function(){
 	world.registerView('map', new MapView());
-	world.registerView('streetmap', new StreetmapView());
+	//world.registerView('streetmap', new StreetmapView());
 	world.registerView('globe', new GlobeView());
 	world.registerView('table', new TableView());
 	world.initializeView('table');
@@ -517,7 +517,6 @@ $(function(){
 	//world.registerView('sample', new SampleView({view: {navbar: {description: "This text overwrites the default description"}}}));
 
 
-	/*
 	jQuery.fn.vectorMap('addMap', 'my-local-map', {"width":"744.09448819","height":"1052.3622047","paths":{"hq":{"name":"headquarter","path":"m0.51 2.87 698.98 0.00 0.00 298.98 -698.98 0.00z"},"br1":{"name":"Branch 1","path":"m0.59 352.96 298.81 0.00 0.00 498.81 -298.81 0.00z"},"br1-wifi-staff":{"name":"Staff Wifi","path":"m50.57 402.94 198.85 0.00 0.00 98.85 -198.85 0.00z"},"br1-wifi-guest":{"name":"Guest Wifi","path":"m50.57 552.94 198.85 0.00 0.00 98.85 -198.85 0.00z"},"hq-dmz":{"name":"DMZ","path":"m50.57 52.94 198.85 0.00 0.00 98.85 -198.85 0.00z"}}});
 
 	world.registerView('local', new MapView({
@@ -539,5 +538,4 @@ $(function(){
 			}
 		}
 	}));
-	*/
 });

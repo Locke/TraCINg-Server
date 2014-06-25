@@ -12,5 +12,5 @@
 		"requestCert": true,
 		"rejectUnauthorized": false
 	},
-	"allowLocal": false
+	"allowLocal": true
 }

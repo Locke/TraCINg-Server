@@ -70,7 +70,7 @@ was able to copy the malware the malwares md5sum is given in addition to a link 
 It is also possible to have a look into logs which dionaea creates to record every attack.
 
 ##### Custom views #####
-TODO
+It is possible.. TODO!
 
 #### Statistics ####
 The statistic shows either the number of attacks per country or per type in a specific time span.
