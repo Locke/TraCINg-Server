@@ -1,5 +1,5 @@
 {
-	"db": "sqlite:///tmp/test.sqlite?debug=true",
+	"db": "sqlite:///root/bpt.sqlite?debug=true",
 	"server": {
         	"httpPort": 8888,
         	"httpsPort": 9999,

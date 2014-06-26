@@ -38,7 +38,9 @@ function listen(server) {
 			console.log(arguments);
 			
 			if (err) {
-				socket.emit("error", err);
+				try {
+					socket.emit("error", err);
+				} catch(err){;}
 				return;
 			}
 			
@@ -50,7 +52,9 @@ function listen(server) {
 			try{
 				db.requestAttacks(filter, function(err, data){
 					if (err) {
-						socket.emit("error", err);
+						try {
+							socket.emit("error", err);
+						} catch(err){;}
 						return;
 					}
 					
@@ -59,9 +63,11 @@ function listen(server) {
 				});
 			}
 			catch(e){
-        	    console.log("Internal error. " + e);
+				console.log("Internal error. " + e);
 				console.log(e.stack);
-				socket.emit("error", {code: "internal error"});
+				try {
+					socket.emit("error", {code: "internal error"});
+				} catch(err){;}
 			}
 		});
 		
@@ -71,16 +77,20 @@ function listen(server) {
 			try{
 				db.getLog(parseInt(data), function(err, data){
 					if (err) {
-						socket.emit("error", err);
+						try {
+							socket.emit("error", err);
+						}  catch(err){;}
 					}
 					// socket callback also on error
 					socketCallback(data);
 				});
 			}
 			catch(e){
-        	    console.log("Internal error. " + e);
+				console.log("Internal error. " + e);
 				console.log(e.stack);
-				socket.emit("error", {code: "internal error"});
+				try {
+					socket.emit("error", {code: "internal error"});
+				} catch(err){;}
 			}
 		});
 		
@@ -89,7 +99,9 @@ function listen(server) {
 			try{
 				db.getStatistics(options, function(err, data){
 					if(err){
-						socket.emit("error", err);
+						try {
+							socket.emit("error", err);
+						} catch(err){;}
 						return;
 					}
 					
@@ -97,9 +109,11 @@ function listen(server) {
 				});
 			}
 			catch(e){
-        	    console.log("Internal error. " + e);
+				console.log("Internal error. " + e);
 				console.log(e.stack);
-				socket.emit("error", {code: "internal error"});
+				try {
+					socket.emit("error", {code: "internal error"});
+				} catch(err){;}
 			}
 		});
 	});
